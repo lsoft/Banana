@@ -5,6 +5,26 @@ namespace Banana.Common.Others
 {
     public static class ArrayHelper
     {
+        public static int Mul(
+            this int[] data
+            )
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
+            var result = data[0];
+
+            for (var index = 1; index < data.Length; ++index)
+            {
+                result *= data[index];
+            }
+
+            return
+                result;
+        }
+
         /// <summary>
         /// Estimates the arithmetic sample mean from the unsorted data array.
         ///             Returns NaN if data is empty or any entry is NaN.

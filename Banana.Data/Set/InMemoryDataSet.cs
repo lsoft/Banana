@@ -77,7 +77,7 @@ namespace Banana.Data.Set
 
             _dataList = dataList;
 
-            this.IsAutoencoderDataSet = _dataList[0].InputLength == _dataList[0].OutputLength);
+            this.IsAutoencoderDataSet = _dataList[0].InputLength == _dataList[0].OutputLength;
         }
 
         public IDataSetIterator StartIterate()

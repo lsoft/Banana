@@ -1,0 +1,78 @@
+﻿using Banana.MLP.Function;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Banana.MLP.Tests.Function.CSharp.Derivative
+{
+    /// <summary>
+    /// Summary description for SparsifierFixture
+    /// </summary>
+    [TestClass]
+    public class SparsifierFixture
+    {
+        public SparsifierFixture()
+        {
+            //
+            // TODO: Add constructor logic here
+            //
+        }
+
+        private TestContext testContextInstance;
+
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
+        #region Additional test attributes
+        //
+        // You can use the following additional attributes as you write your tests:
+        //
+        // Use ClassInitialize to run code before running the first test in the class
+        // [ClassInitialize()]
+        // public static void MyClassInitialize(TestContext testContext) { }
+        //
+        // Use ClassCleanup to run code after all tests in a class have run
+        // [ClassCleanup()]
+        // public static void MyClassCleanup() { }
+        //
+        // Use TestInitialize to run code before running each test 
+        // [TestInitialize()]
+        // public void MyTestInitialize() { }
+        //
+        // Use TestCleanup to run code after each test has run
+        // [TestCleanup()]
+        // public void MyTestCleanup() { }
+        //
+        #endregion
+
+        [TestMethod]
+        public void SparsifierTestWithDefaultCoef()
+        {
+            var sf = new SparsifierFunction();
+
+            var tests = new ActivationFunctionDerivativeTests();
+            tests.ExecuteTests(sf, -10.05f, 3f, 0.013f, 0.006f);
+        }
+
+        [TestMethod]
+        public void SparsifierTestWithOneTwoCoef()
+        {
+            var sf = new SparsifierFunction(1f, 2f);
+
+            var tests = new ActivationFunctionDerivativeTests();
+            tests.ExecuteTests(sf, -10.05f, 3f, 0.013f, 0.006f);
+        }
+
+    }
+}
