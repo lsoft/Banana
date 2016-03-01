@@ -5,6 +5,7 @@
         NotSpecified,
         DataError,
         InvalidOperation,
-        InvalidArgument
+        InvalidArgument,
+        NotApplicable
     }
 }

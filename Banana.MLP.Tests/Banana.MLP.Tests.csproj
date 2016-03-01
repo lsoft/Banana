@@ -72,12 +72,17 @@
     <Compile Include="Function\OpenCL\Value\RLUOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SigmoidOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SparsifierOpenCLFixture.cs" />
+    <Compile Include="LayerPropagator\CSharp\CSharpLayerPropagatorFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">
       <Project>{2AE49BB5-0303-44F9-9FDE-743D54D599A2}</Project>
       <Name>Banana.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.MLP.Classic.ForwardPropagation\Banana.MLP.Classic.ForwardPropagation.csproj">
+      <Project>{5231DB37-CF38-40A2-B52A-93AA32384E5B}</Project>
+      <Name>Banana.MLP.Classic.ForwardPropagation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Banana.MLP\Banana.MLP.csproj">
       <Project>{2CD1E4FF-5354-4C99-84E3-D267CA1AA1A3}</Project>

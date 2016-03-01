@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Banana.Common.Others;
 
-namespace Banana.MLP.Dimension
+namespace Banana.MLP.Dim
 {
     [Serializable]
     public class Dimension : IDimension

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Banana.Common.Others
 {
@@ -8,6 +9,15 @@ namespace Banana.Common.Others
         {
             private float _sum;
             private float _c;
+
+            public float Sum
+            {
+                get
+                {
+                    return
+                        _sum;
+                }
+            }
 
             public Accumulator(
                 )

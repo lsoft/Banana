@@ -1,4 +1,4 @@
-﻿namespace Banana.MLP.Dimension
+﻿namespace Banana.MLP.Dim
 {
     public interface IDimension
     {
