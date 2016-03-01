@@ -170,13 +170,12 @@ namespace Banana.MLP.Tests.LayerPropagator.CSharp
             plc = new CSharpLayerContainer(
                 new InputLayerConfiguration(
                     previousLayerNeuronCount
-                    ),
-                0
+                    )
                 );
 
             clc = new CSharpLayerContainer(
-                l,
-                plc.Configuration.TotalNeuronCount
+                plc.Configuration,
+                l
                 );
 
             lp = new CSharpLayerPropagator(

@@ -29,5 +29,26 @@ namespace Banana.MLP.Container.CSharp
         {
             get;
         }
+
+        float[] DeDz
+        {
+            get;
+        }
+
+        float[] DeDy
+        {
+            get;
+        }
+
+        float[] NablaWeights
+        {
+            get;
+        }
+
+        float[] NablaBiases
+        {
+            get;
+        }
+
     }
 }

@@ -22,7 +22,7 @@ namespace OpenCL.Net.Wrapper.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace OpenCL.Net.Wrapper.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OpenCL.Net.Wrapper.Properties.Resources", typeof(Resources).Assembly);
@@ -51,12 +51,47 @@ namespace OpenCL.Net.Wrapper.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to typedef struct
+        ///{
+        ///    uint AIndex;
+        ///    uint BIndex;
+        ///    float Distance;
+        ///} SortItem;
+        ///
+        ///__inline ulong GetKey(SortItem d)
+        ///{
+        ///    ulong a = d.AIndex;
+        ///
+        ///    return
+        ///        (a &lt;&lt; 32) + d.BIndex;
+        ///}
+        ///
+        ///__kernel void BitonicSortKernel(
+        ///    __global SortItem * theArray,
+        ///    const uint stage, 
+        ///    const uint passOfStage,
+        ///    const uint direction
+        ///    )
+        ///{
+        ///    uint sortIncreasing = direction;
+        ///    ulong threadId = get_global_id(0);
+        ///     
+        ///    ulong pairDistance = 1 &lt;&lt; (stage - passOfStage);
+        ///    ulong b [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string BitonicSort {
+            get {
+                return ResourceManager.GetString("BitonicSort", resourceCulture);
             }
         }
         
@@ -95,7 +130,7 @@ namespace OpenCL.Net.Wrapper.Properties {
         ///{
         ///    float y = dataIt [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string KahanAlgorithm {
+        public static string KahanAlgorithm {
             get {
                 return ResourceManager.GetString("KahanAlgorithm", resourceCulture);
             }
@@ -124,7 +159,7 @@ namespace OpenCL.Net.Wrapper.Properties {
         ///    KahanAddElement(&amp;acc, acc16-&gt;Sum.s6);
         ///    Kahan [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string KahanAlgorithm16 {
+        public static string KahanAlgorithm16 {
             get {
                 return ResourceManager.GetString("KahanAlgorithm16", resourceCulture);
             }
@@ -159,7 +194,7 @@ namespace OpenCL.Net.Wrapper.Properties {
         ///    result.Sum = 0.0;
         ///    res [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string KahanAlgorithm4 {
+        public static string KahanAlgorithm4 {
             get {
                 return ResourceManager.GetString("KahanAlgorithm4", resourceCulture);
             }
@@ -172,25 +207,24 @@ namespace OpenCL.Net.Wrapper.Properties {
         ///inline void WarpReductionToFirstElement(
         ///    __local float *partialDotProduct)
         ///{
-        ///	if(get_local_id(0) == 0)
-        ///	{
-        ///		float sum = 0;
-        ///		for(int c = 0; c &lt; get_local_size(0); c++)
-        ///		{
-        ///			sum += partialDotProduct[c];
-        ///		}
-        ///		partialDotProduct[0] = sum;
-        ///	}
-        ///	barrier(CLK_LOCAL_MEM_FENCE);
+        ///    if(get_local_id(0) == 0)
+        ///    {
+        ///        float sum = 0;
+        ///        for(int c = 0; c &lt; get_local_size(0); c++)
+        ///        {
+        ///            sum += partialDotProduct[c];
+        ///        }
+        ///        partialDotProduct[0] = sum;
+        ///    }
+        ///    barrier(CLK_LOCAL_MEM_FENCE);
         ///}
         /////*/
         ///
         ///
         /////reduction with 2x rate
-        /////local size must be equal partialDotProduct size
-        ///inline void WarpReductionToFirstEle [rest of string was truncated]&quot;;.
+        /////local size must be equal partialD [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Reduction {
+        public static string Reduction {
             get {
                 return ResourceManager.GetString("Reduction", resourceCulture);
             }

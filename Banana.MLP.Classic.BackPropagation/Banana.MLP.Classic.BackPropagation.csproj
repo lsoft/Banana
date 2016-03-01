@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2AE49BB5-0303-44F9-9FDE-743D54D599A2}</ProjectGuid>
+    <ProjectGuid>{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Banana.Common</RootNamespace>
-    <AssemblyName>Banana.Common</AssemblyName>
+    <RootNamespace>Banana.MLP.Classic.BackPropagation</RootNamespace>
+    <AssemblyName>Banana.MLP.Classic.BackPropagation</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,34 +39,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ambient\ConsoleAmbientContext.cs" />
-    <Compile Include="Ambient\DefaultOutputConsole.cs" />
-    <Compile Include="Ambient\IOutputConsole.cs" />
-    <Compile Include="ForHelper.cs" />
-    <Compile Include="LearningRate\ConstLearningRate.cs" />
-    <Compile Include="LearningRate\ILearningRate.cs" />
-    <Compile Include="LearningRate\LinearLearningRate.cs" />
-    <Compile Include="Metrics\AUC.cs" />
-    <Compile Include="Metrics\HalfSquaredEuclidianDistance.cs" />
-    <Compile Include="Metrics\IMetrics.cs" />
-    <Compile Include="Metrics\Loglikelihood.cs" />
-    <Compile Include="Metrics\MultiClassLogLoss.cs" />
-    <Compile Include="Metrics\RMSE.cs" />
-    <Compile Include="Metrics\TestPurposeMetric.cs" />
-    <Compile Include="Others\ArrayHelper.cs" />
-    <Compile Include="Others\DoubleConverter.cs" />
-    <Compile Include="Others\EnumerableHelper.cs" />
-    <Compile Include="Others\FloatHelper.cs" />
-    <Compile Include="Others\KahanAlgorithm.cs" />
-    <Compile Include="Others\Pair.cs" />
-    <Compile Include="Others\SplitHelper.cs" />
+    <Compile Include="CSharp\Kernel\HiddenLayerKernel.cs" />
+    <Compile Include="CSharp\Kernel\OutputLayerKernel.cs" />
+    <Compile Include="CSharp\Kernel\UpdateWeightKernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sort\AMDBitonicSorter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenCL.Net.Wrapper\OpenCL.Net.Wrapper.csproj">
-      <Project>{A405C95D-FECE-488D-A6A4-B8C6FA184880}</Project>
-      <Name>OpenCL.Net.Wrapper</Name>
+    <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">
+      <Project>{2AE49BB5-0303-44F9-9FDE-743D54D599A2}</Project>
+      <Name>Banana.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.MLP\Banana.MLP.csproj">
+      <Project>{2CD1E4FF-5354-4C99-84E3-D267CA1AA1A3}</Project>
+      <Name>Banana.MLP</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

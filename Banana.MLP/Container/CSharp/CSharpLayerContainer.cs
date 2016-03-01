@@ -35,28 +35,93 @@ namespace Banana.MLP.Container.CSharp
             private set;
         }
 
+        public float[] DeDz
+        {
+            get;
+            private set;
+        }
+
+        public float[] DeDy
+        {
+            get;
+            private set;
+        }
+
+        public float[] NablaWeights
+        {
+            get;
+            private set;
+        }
+
+        public float[] NablaBiases
+        {
+            get;
+            private set;
+        }
+
         public CSharpLayerContainer(
-            ILayerConfiguration layerConfiguration,
-            int weightCount
+            ILayerConfiguration currentLayerConfiguration
             )
         {
-            if (layerConfiguration == null)
+            if (currentLayerConfiguration == null)
             {
-                throw new ArgumentNullException("layerConfiguration");
+                throw new ArgumentNullException("currentLayerConfiguration");
             }
 
-            Configuration = layerConfiguration;
-
-            var totalNeuronCount = layerConfiguration.TotalNeuronCount;
-            var biasCount = layerConfiguration.TotalBiasCount;
+            Configuration = currentLayerConfiguration;
 
             //веса
-            WeightMem = weightCount > 0 ? new float[weightCount] : null;
-            BiasMem = biasCount > 0 ? new float[biasCount] : null;
+            WeightMem = null;
+            BiasMem = null;
+
+            //нейроны
+            NetMem = new float[currentLayerConfiguration.TotalNeuronCount];
+            StateMem = new float[currentLayerConfiguration.TotalNeuronCount];
+
+            //производные
+            this.DeDz = null;
+            this.DeDy = null;
+
+            //дельты
+            this.NablaWeights = null;
+            this.NablaBiases = null;
+        }
+
+        public CSharpLayerContainer(
+            ILayerConfiguration previousLayerConfiguration,
+            ILayerConfiguration currentLayerConfiguration
+            )
+        {
+            if (previousLayerConfiguration == null)
+            {
+                throw new ArgumentNullException("previousLayerConfiguration");
+            }
+            if (currentLayerConfiguration == null)
+            {
+                throw new ArgumentNullException("currentLayerConfiguration");
+            }
+
+            Configuration = currentLayerConfiguration;
+
+            var totalNeuronCount = currentLayerConfiguration.TotalNeuronCount;
+            var weightCount = currentLayerConfiguration.TotalNeuronCount * previousLayerConfiguration.TotalNeuronCount;
+            var biasCount = currentLayerConfiguration.TotalBiasCount;
+
+            //веса
+            WeightMem = new float[weightCount];
+            BiasMem = new float[biasCount];
 
             //нейроны
             NetMem = new float[totalNeuronCount];
             StateMem = new float[totalNeuronCount];
+
+            //производные
+            this.DeDz = new float[currentLayerConfiguration.TotalNeuronCount];
+            this.DeDy = new float[previousLayerConfiguration.TotalNeuronCount];
+
+            //дельты
+            this.NablaWeights = new float[weightCount];
+            this.NablaBiases = new float[biasCount];
         }
 
         /*

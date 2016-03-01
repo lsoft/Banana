@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenCL.Net, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCL.Net.2.2.9.0\lib\net40\OpenCL.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +45,13 @@
   <ItemGroup>
     <Compile Include="Container\CSharp\ICSharpLayerContainer.cs" />
     <Compile Include="Container\CSharp\CSharpLayerContainer.cs" />
+    <Compile Include="DeDyAggregator\CSharpDeDyAggregator.cs" />
+    <Compile Include="DeDyAggregator\IDeDyAggregator.cs" />
+    <Compile Include="DesiredValues\CSharpDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\ICSharpDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\IDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\IMemDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\MemDesiredValuesContainer.cs" />
     <Compile Include="Dim\Dimension.cs" />
     <Compile Include="Dim\IDimension.cs" />
     <Compile Include="Function\DRLUFunction.cs" />
@@ -55,6 +66,8 @@
     <Compile Include="Layer\ILayerConfiguration.cs" />
     <Compile Include="Layer\InputLayerConfiguration.cs" />
     <Compile Include="Layer\LayerTypeEnum.cs" />
+    <Compile Include="LearningConfig\ILearningAlgorithmConfig.cs" />
+    <Compile Include="LearningConfig\LearningAlgorithmConfig.cs" />
     <Compile Include="MLP\IMLPConfiguration.cs" />
     <Compile Include="MLP\MLPConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,7 +87,17 @@
       <Name>OpenCL.Net.Wrapper</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets" Condition="Exists('..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

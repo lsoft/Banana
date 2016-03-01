@@ -73,7 +73,15 @@
     <Compile Include="Function\OpenCL\Value\SigmoidOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SparsifierOpenCLFixture.cs" />
     <Compile Include="LayerPropagator\CSharp\CSharpLayerPropagatorFixture.cs" />
+    <Compile Include="Metrics\HalfSquaredEuclidianDistanceFixture.cs" />
+    <Compile Include="Metrics\LogLikelihoodFixture.cs" />
+    <Compile Include="Metrics\MetricTester.cs" />
+    <Compile Include="Metrics\RMSEFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reduction\Performance\WarpReductionPerformanceFixture.cs" />
+    <Compile Include="Reduction\WarpReductionFixture.cs" />
+    <Compile Include="Sort\SortFixture.cs" />
+    <Compile Include="Sort\SortItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">
