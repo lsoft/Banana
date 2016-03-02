@@ -39,10 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CSharp\Kernel\HiddenLayerKernel.cs" />
-    <Compile Include="CSharp\Kernel\OutputLayerKernel.cs" />
-    <Compile Include="CSharp\Kernel\UpdateWeightKernel.cs" />
+    <Compile Include="Backpropagator\Layer\CSharpLayerBackpropagator.cs" />
+    <Compile Include="Backpropagator\MLP\CSharpMLPBackpropagator.cs" />
+    <Compile Include="DeDyAggregator\CSharpDeDyAggregator.cs" />
+    <Compile Include="DeDyAggregator\IDeDyAggregator.cs" />
+    <Compile Include="DeDzCalculator\Hidden\CSharpHiddenLayerDeDzCalculator.cs" />
+    <Compile Include="DeDzCalculator\IDeDzCalculator.cs" />
+    <Compile Include="DeDzCalculator\Output\CSharpOutputLayerDeDzCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateNablaExecutor\CSharpUpdateNablaExecutor.cs" />
+    <Compile Include="UpdateNablaExecutor\IUpdateNablaExecutor.cs" />
+    <Compile Include="UpdateNeuronExecutor\CSharpUpdateNeuronExecutor.cs" />
+    <Compile Include="UpdateNeuronExecutor\IUpdateNeuronExecutor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">

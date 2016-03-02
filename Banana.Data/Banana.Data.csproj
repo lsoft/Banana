@@ -47,6 +47,10 @@
     <Compile Include="Normalizer\DefaultNormalizer.cs" />
     <Compile Include="Normalizer\INormalizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\ISerializationHelper.cs" />
+    <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="SetProvider\IDataSetProvider.cs" />
+    <Compile Include="SetProvider\SingleDataSetProvider.cs" />
     <Compile Include="Set\IDataSet.cs" />
     <Compile Include="Set\IDataSetIterator.cs" />
     <Compile Include="Set\InMemoryDataSet.cs" />

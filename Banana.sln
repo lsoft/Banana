@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banana.MLP.Classic.ForwardP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banana.MLP.Classic.BackPropagation", "Banana.MLP.Classic.BackPropagation\Banana.MLP.Classic.BackPropagation.csproj", "{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banana.Backpropagation", "Banana.Backpropagation\Banana.Backpropagation.csproj", "{81CA865F-A874-4098-A315-80A127019E89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,12 @@ Global
 		{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}.Release|x64.ActiveCfg = Release|Any CPU
+		{81CA865F-A874-4098-A315-80A127019E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81CA865F-A874-4098-A315-80A127019E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81CA865F-A874-4098-A315-80A127019E89}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{81CA865F-A874-4098-A315-80A127019E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81CA865F-A874-4098-A315-80A127019E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81CA865F-A874-4098-A315-80A127019E89}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

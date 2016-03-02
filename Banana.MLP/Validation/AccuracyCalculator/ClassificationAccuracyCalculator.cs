@@ -1,0 +1,219 @@
+using System;
+using System.Linq;
+using Banana.Common.Ambient;
+using Banana.Common.Metrics;
+using Banana.Common.Others;
+using Banana.Data.Set;
+using Banana.MLP.AccuracyRecord;
+using Banana.MLP.Propagator.MLP;
+using Banana.MLP.Validation.Drawer;
+
+namespace Banana.MLP.Validation.AccuracyCalculator
+{
+    public class ClassificationAccuracyCalculator : IAccuracyCalculator
+    {
+        private readonly IMetrics _errorMetrics;
+        private readonly IDataSet _validationData;
+        private readonly int _domainCountThreshold;
+        private readonly int _outputLength;
+        
+        private readonly AccuracyCalculatorBatchIterator _batchIterator;
+
+        public ClassificationAccuracyCalculator(
+            IMetrics errorMetrics,
+            IDataSet validationData,
+            int domainCountThreshold = 100
+            )
+        {
+            if (errorMetrics == null)
+            {
+                throw new ArgumentNullException("errorMetrics");
+            }
+            if (validationData == null)
+            {
+                throw new ArgumentNullException("validationData");
+            }
+
+            _errorMetrics = errorMetrics;
+            _validationData = validationData;
+            _domainCountThreshold = domainCountThreshold;
+
+            _outputLength = validationData.OutputLength;
+
+            _batchIterator = new AccuracyCalculatorBatchIterator();
+        }
+
+        public void CalculateAccuracy(
+            IMLPPropagator forwardPropagation,
+            int? epocheNumber,
+            IDrawer drawer, 
+            out IAccuracyRecord accuracyRecord
+            )
+        {
+            if (forwardPropagation == null)
+            {
+                throw new ArgumentNullException("forwardPropagation");
+            }
+            //drawer allowed to be null
+
+            if (drawer != null)
+            {
+                drawer.SetSize(
+                    _validationData.Count
+                    );
+            }
+
+            var correctArray = new int[_outputLength];
+            var totalArray = new int[_outputLength];
+
+            var totalCorrectCount = 0;
+            var totalFailCount = 0;
+
+            var totalErrorAcc = new KahanAlgorithm.Accumulator();
+
+            _batchIterator.IterateByBatch(
+                _validationData,
+                forwardPropagation,
+                (netResult, testItem) =>
+                {
+                    #region рисуем итем
+
+                    if (drawer != null)
+                    {
+                        drawer.DrawItem(netResult);
+                    }
+
+                    #endregion
+
+                    #region суммируем ошибку
+
+                    var err = _errorMetrics.Calculate(
+                        testItem.Output,
+                        netResult.NState
+                        );
+
+                    totalErrorAcc.Add(err);
+
+                    #endregion
+
+                    #region вычисляем успешность классификации
+
+                    var correctIndex = testItem.OutputIndex;
+
+                    var success = false;
+
+                    //берем максимальный вес на выходных
+                    var max = netResult.NState.Max();
+                    if (max > 0) //если это не нуль, значит хоть что-то да распозналось
+                    {
+                        //если таких (максимальных) весов больше одного, значит, сеть не смогла точно идентифицировать символ
+                        if (netResult.Count(j => Math.Abs(j - max) < float.Epsilon) == 1)
+                        {
+                            //таки смогла, присваиваем результат
+                            var recognizeIndex = netResult.ToList().FindIndex(j => Math.Abs(j - max) < float.Epsilon);
+
+                            success = correctIndex == recognizeIndex;
+                        }
+                    }
+
+                    totalArray[correctIndex]++;
+
+                    if (success)
+                    {
+                        totalCorrectCount++;
+                        correctArray[correctIndex]++;
+                    }
+                    else
+                    {
+                        totalFailCount++;
+                    }
+
+                    #endregion
+                });
+
+            var totalError = totalErrorAcc.Sum;
+
+            var perItemError = totalError / _validationData.Count;
+            var totalCount = totalCorrectCount + totalFailCount;
+
+            var correctPercentCount = ((int)((long)totalCorrectCount * 10000 / totalCount) / 100.0);
+
+            accuracyRecord = new ClassificationAccuracyRecord(
+                epocheNumber ?? 0,
+                totalCount,
+                totalCorrectCount,
+                perItemError
+                );
+
+            //ети две нижние строки возможно можно взять из acuracyRecord!!! переделать!
+            ConsoleAmbientContext.Console.WriteLine(
+                string.Format(
+                    "Error = {0}, per-item error = {1}",
+                    totalError,
+                    DoubleConverter.ToExactString(perItemError)));
+
+            ConsoleAmbientContext.Console.WriteLine(
+                string.Format(
+                    "Success: {0}, fail: {1}, total: {2}, success %: {3}",
+                    totalCorrectCount,
+                    totalFailCount,
+                    totalCount,
+                    correctPercentCount));
+
+            #region по классам репортим
+
+            if (correctArray.Length < _domainCountThreshold)
+            {
+                for (var cc = 0; cc < correctArray.Length; cc++)
+                {
+                    ConsoleAmbientContext.Console.Write(cc + ": ");
+
+                    var p = (int)((correctArray[cc] / (double)totalArray[cc]) * 10000) / 100.0;
+                    ConsoleAmbientContext.Console.Write(correctArray[cc] + "/" + totalArray[cc] + "(" + p + "%)");
+
+                    if (cc != (correctArray.Length - 1))
+                    {
+                        ConsoleAmbientContext.Console.Write("   ");
+                    }
+                    else
+                    {
+                        ConsoleAmbientContext.Console.WriteLine(string.Empty);
+                    }
+                }
+
+                #region определяем классы, в которых нуль распознаваний
+
+                var zeroClasses = string.Empty;
+                var index = 0;
+                foreach (var c in correctArray)
+                {
+                    if (c == 0)
+                    {
+                        zeroClasses += index;
+                    }
+
+                    index++;
+                }
+
+                if (!string.IsNullOrEmpty(zeroClasses))
+                {
+                    ConsoleAmbientContext.Console.WriteLine("Not recognized: " + zeroClasses);
+                }
+
+                #endregion
+            }
+            else
+            {
+                ConsoleAmbientContext.Console.WriteLine("Too many domains, details output is disabled");
+            }
+
+            #endregion
+
+            if (drawer != null)
+            {
+                drawer.Save();
+            }
+        }
+
+    }
+}

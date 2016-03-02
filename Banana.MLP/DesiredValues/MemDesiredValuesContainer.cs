@@ -1,5 +1,5 @@
 using System;
-using Banana.MLP.Layer;
+using Banana.MLP.Configuration.Layer;
 using OpenCL.Net;
 using OpenCL.Net.Wrapper;
 using OpenCL.Net.Wrapper.Mem;

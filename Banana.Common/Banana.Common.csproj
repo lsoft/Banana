@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,7 +43,12 @@
     <Compile Include="Ambient\ConsoleAmbientContext.cs" />
     <Compile Include="Ambient\DefaultOutputConsole.cs" />
     <Compile Include="Ambient\IOutputConsole.cs" />
+    <Compile Include="AriphmeticHelper.cs" />
     <Compile Include="ForHelper.cs" />
+    <Compile Include="IterateHelper\EnumerableExtensions.cs" />
+    <Compile Include="IterateHelper\ZipEntry.cs" />
+    <Compile Include="LayerState\ILayerState.cs" />
+    <Compile Include="LayerState\LayerState.cs" />
     <Compile Include="LearningRate\ConstLearningRate.cs" />
     <Compile Include="LearningRate\ILearningRate.cs" />
     <Compile Include="LearningRate\LinearLearningRate.cs" />
@@ -59,9 +65,13 @@
     <Compile Include="Others\FloatHelper.cs" />
     <Compile Include="Others\KahanAlgorithm.cs" />
     <Compile Include="Others\Pair.cs" />
+    <Compile Include="Others\RandomHelper.cs" />
     <Compile Include="Others\SplitHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sort\AMDBitonicSorter.cs" />
+    <Compile Include="Visualizer\BitmapHelper.cs" />
+    <Compile Include="Visualizer\Factory\IVisualizerFactory.cs" />
+    <Compile Include="Visualizer\IVisualizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenCL.Net.Wrapper\OpenCL.Net.Wrapper.csproj">

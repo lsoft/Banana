@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.Linq;
 using Banana.Common.Others;
-using Banana.MLP.Classic.ForwardPropagation.CSharp;
-using Banana.MLP.Container.CSharp;
+using Banana.MLP.Classic.ForwardPropagation.Layer;
+using Banana.MLP.Configuration.Layer;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Dim;
 using Banana.MLP.Function;
-using Banana.MLP.Layer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Banana.MLP.Tests.LayerPropagator.CSharp

@@ -1,5 +1,5 @@
 using System;
-using Banana.MLP.Layer;
+using Banana.MLP.Configuration.Layer;
 
 namespace Banana.MLP.DesiredValues
 {

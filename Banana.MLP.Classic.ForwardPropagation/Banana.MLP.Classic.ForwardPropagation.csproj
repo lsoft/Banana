@@ -39,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CSharp\CSharpLayerPropagator.cs" />
-    <Compile Include="ILayerPropagator.cs" />
+    <Compile Include="Layer\CSharpLayerPropagator.cs" />
+    <Compile Include="MLP\CSharpMLPPropagator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
@@ -48,6 +48,10 @@
     <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">
       <Project>{2AE49BB5-0303-44F9-9FDE-743D54D599A2}</Project>
       <Name>Banana.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.Data\Banana.Data.csproj">
+      <Project>{E28BCCDA-6BEE-4C9C-AAE0-5F3D0CD52463}</Project>
+      <Name>Banana.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Banana.MLP\Banana.MLP.csproj">
       <Project>{2CD1E4FF-5354-4C99-84E3-D267CA1AA1A3}</Project>

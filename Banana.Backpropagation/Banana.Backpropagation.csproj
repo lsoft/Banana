@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{81CA865F-A874-4098-A315-80A127019E89}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Banana.Backpropagation</RootNamespace>
+    <AssemblyName>Banana.Backpropagation</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithm\BackpropagationAlgorithm.cs" />
+    <Compile Include="EpochTrainer\DefaultEpochTrainer.cs" />
+    <Compile Include="EpochTrainer\IEpochTrainer.cs" />
+    <Compile Include="Propagators\CSharpMLPPropagators.cs" />
+    <Compile Include="Propagators\IMLPPropagators.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateNeuronExecutors\CSharpUpdateNeuronExecutors.cs" />
+    <Compile Include="UpdateNeuronExecutors\IUpdateNeuronExecutors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">
+      <Project>{2AE49BB5-0303-44F9-9FDE-743D54D599A2}</Project>
+      <Name>Banana.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.Data\Banana.Data.csproj">
+      <Project>{E28BCCDA-6BEE-4C9C-AAE0-5F3D0CD52463}</Project>
+      <Name>Banana.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.MLP.Classic.BackPropagation\Banana.MLP.Classic.BackPropagation.csproj">
+      <Project>{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}</Project>
+      <Name>Banana.MLP.Classic.BackPropagation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.MLP.Classic.ForwardPropagation\Banana.MLP.Classic.ForwardPropagation.csproj">
+      <Project>{5231DB37-CF38-40A2-B52A-93AA32384E5B}</Project>
+      <Name>Banana.MLP.Classic.ForwardPropagation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.MLP\Banana.MLP.csproj">
+      <Project>{2CD1E4FF-5354-4C99-84E3-D267CA1AA1A3}</Project>
+      <Name>Banana.MLP</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
