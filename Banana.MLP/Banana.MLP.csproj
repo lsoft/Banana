@@ -58,9 +58,12 @@
     <Compile Include="Container\MLP\CSharpMLPContainer.cs" />
     <Compile Include="Container\MLP\IMLPContainer.cs" />
     <Compile Include="DesiredValues\CSharpDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\CSharpQueueDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\DataSetIterator\DesiredValuesContainerIterator.cs" />
     <Compile Include="DesiredValues\ICSharpDesiredValuesContainer.cs" />
     <Compile Include="DesiredValues\IDesiredValuesContainer.cs" />
     <Compile Include="DesiredValues\IMemDesiredValuesContainer.cs" />
+    <Compile Include="DesiredValues\IQueueDesiredValuesContainer.cs" />
     <Compile Include="DesiredValues\MemDesiredValuesContainer.cs" />
     <Compile Include="Dim\Dimension.cs" />
     <Compile Include="Dim\IDimension.cs" />

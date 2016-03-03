@@ -10,11 +10,12 @@ using Banana.Data.Item;
 using Banana.Data.Set;
 using Banana.Exception;
 
-namespace Banana.Data.Iterator
+namespace Banana.MLP.DesiredValues.DataSetIterator
 {
-    public class BackgroundQueueDataSetIterator : IDataSetIterator
+    public class DesiredValuesContainerIterator : IDataSetIterator
     {
         private readonly int _cacheSize;
+        private readonly IQueueDesiredValuesContainer _queueDesiredValuesContainer;
         private readonly IDataSetIterator _iterator;
 
         private readonly ManualResetEventSlim _abortEvent = new ManualResetEventSlim(false);
@@ -49,11 +50,16 @@ namespace Banana.Data.Iterator
             }
         }
 
-        public BackgroundQueueDataSetIterator(
+        public DesiredValuesContainerIterator(
             int cacheSize,
+            IQueueDesiredValuesContainer queueDesiredValuesContainer,
             IDataSetIterator iterator
             )
         {
+            if (queueDesiredValuesContainer == null)
+            {
+                throw new ArgumentNullException("queueDesiredValuesContainer");
+            }
             if (iterator == null)
             {
                 throw new ArgumentNullException("iterator");
@@ -63,7 +69,10 @@ namespace Banana.Data.Iterator
                 throw new ArgumentException("cacheSize < 1");
             }
 
+            throw new InvalidOperationException("Not tested! Please test extensively before use.");
+
             _cacheSize = cacheSize;
+            _queueDesiredValuesContainer = queueDesiredValuesContainer;
             _iterator = iterator;
 
             Reset();
@@ -90,7 +99,10 @@ namespace Banana.Data.Iterator
             }
 
             var result = newItem != null; //если null - коллекция закончилась
+
             this.Current = newItem;
+            
+            _queueDesiredValuesContainer.MoveNext();
 
             return result;
         }
@@ -102,6 +114,7 @@ namespace Banana.Data.Iterator
             _workQueue = new ConcurrentQueue<IDataItem>();
 
             _iterator.Reset();
+            _queueDesiredValuesContainer.Reset();
 
             StartWork();
         }
@@ -172,6 +185,7 @@ namespace Banana.Data.Iterator
                     }
 
                     _bgQueue.Enqueue(i);
+                    _queueDesiredValuesContainer.SetValues(i.Output);
                 }
                 else
                 {
