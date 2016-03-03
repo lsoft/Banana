@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Algorithm\BackpropagationAlgorithm.cs" />
     <Compile Include="Config\BackpropagationConfig.cs" />
+    <Compile Include="Config\IBackpropagationConfig.cs" />
     <Compile Include="EpochTrainer\DefaultEpochTrainer.cs" />
     <Compile Include="EpochTrainer\IEpochTrainer.cs" />
     <Compile Include="Propagators\CSharpMLPPropagators.cs" />

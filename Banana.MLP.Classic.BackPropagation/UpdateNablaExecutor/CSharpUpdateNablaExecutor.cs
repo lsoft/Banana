@@ -11,13 +11,11 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
     {
         private readonly ICSharpLayerContainer _previousLayerContainer;
         private readonly ICSharpLayerContainer _currentLayerContainer;
-        private readonly ICSharpDesiredValuesContainer _desiredValuesContainer;
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
 
         public CSharpUpdateNablaExecutor(
             ICSharpLayerContainer previousLayerContainer,
             ICSharpLayerContainer currentLayerContainer,
-            ICSharpDesiredValuesContainer desiredValuesContainer,
             ILearningAlgorithmConfig learningAlgorithmConfig
             )
         {
@@ -29,17 +27,13 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
             {
                 throw new ArgumentNullException("currentLayerContainer");
             }
-            if (desiredValuesContainer == null)
-            {
-                throw new ArgumentNullException("desiredValuesContainer");
-            }
             if (learningAlgorithmConfig == null)
             {
                 throw new ArgumentNullException("learningAlgorithmConfig");
             }
+
             _previousLayerContainer = previousLayerContainer;
             _currentLayerContainer = currentLayerContainer;
-            _desiredValuesContainer = desiredValuesContainer;
             _learningAlgorithmConfig = learningAlgorithmConfig;
         }
 

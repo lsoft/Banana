@@ -1,31 +1,27 @@
 using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using Banana.Exception;
-using Banana.MLP.Configuration.Layer;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace Banana.MLP.DesiredValues
 {
     public class CSharpDesiredValuesContainer : ICSharpDesiredValuesContainer
     {
+        private readonly Queue<float[]> _queue = new Queue<float[]>();
+
         public float[] DesiredOutput
         {
             get;
             private set;
         }
 
+
         public CSharpDesiredValuesContainer(
-            ILayerConfiguration layerConfiguration
             )
         {
-            if (layerConfiguration == null)
-            {
-                throw new ArgumentNullException("layerConfiguration");
-            }
+            DesiredOutput = null;
 
-            var outputLength = layerConfiguration.TotalNeuronCount;
+            throw new InvalidOperationException("Not tested! Please test extensively before use.");
 
-            this.DesiredOutput = new float[outputLength];
         }
 
         public void SetValues(float[] desiredValues)
@@ -34,13 +30,55 @@ namespace Banana.MLP.DesiredValues
             {
                 throw new ArgumentNullException("desiredValues");
             }
-            if (desiredValues.Length != DesiredOutput.Length)
-            {
-                throw new InvalidOperationException("desiredValues.Length != DesiredOutput.Length");
-            }
 
-            desiredValues.CopyTo(DesiredOutput, 0);
+            _queue.Enqueue(desiredValues);
+
+            Refresh(true);
         }
 
+        public bool MoveNext()
+        {
+            return 
+                Refresh(false);
+        }
+
+        public void Reset()
+        {
+            _queue.Clear();
+            DesiredOutput = null;
+        }
+
+        private bool Refresh(
+            bool onlyIfEmpty
+            )
+        {
+            var result = false;
+            
+            var allowedtoProceed = false;
+            if (onlyIfEmpty)
+            {
+                if (DesiredOutput == null)
+                {
+                    allowedtoProceed = true;
+                }
+            }
+            else
+            {
+                allowedtoProceed = true;
+            }
+
+            if (allowedtoProceed)
+            {
+                if(_queue.Count > 0)
+                {
+                    DesiredOutput = _queue.Dequeue();
+
+                    result = true;
+                }
+            }
+
+            return
+                result;
+        }
     }
 }

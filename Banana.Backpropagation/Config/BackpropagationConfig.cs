@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace Banana.Backpropagation.Config
 {
-    public interface IBackpropagationConfig
-    {
-        int ItemCountCacheSize
-        {
-            get;
-        }
-    }
-
     public class BackpropagationConfig : IBackpropagationConfig
     {
         public int ItemCountCacheSize

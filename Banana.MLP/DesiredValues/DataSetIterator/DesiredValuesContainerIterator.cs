@@ -15,7 +15,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
     public class DesiredValuesContainerIterator : IDataSetIterator
     {
         private readonly int _cacheSize;
-        private readonly IQueueDesiredValuesContainer _queueDesiredValuesContainer;
+        private readonly IDesiredValuesContainer _desiredValuesContainer;
         private readonly IDataSetIterator _iterator;
 
         private readonly ManualResetEventSlim _abortEvent = new ManualResetEventSlim(false);
@@ -52,13 +52,13 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
 
         public DesiredValuesContainerIterator(
             int cacheSize,
-            IQueueDesiredValuesContainer queueDesiredValuesContainer,
+            IDesiredValuesContainer desiredValuesContainer,
             IDataSetIterator iterator
             )
         {
-            if (queueDesiredValuesContainer == null)
+            if (desiredValuesContainer == null)
             {
-                throw new ArgumentNullException("queueDesiredValuesContainer");
+                throw new ArgumentNullException("desiredValuesContainer");
             }
             if (iterator == null)
             {
@@ -72,7 +72,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
             throw new InvalidOperationException("Not tested! Please test extensively before use.");
 
             _cacheSize = cacheSize;
-            _queueDesiredValuesContainer = queueDesiredValuesContainer;
+            _desiredValuesContainer = desiredValuesContainer;
             _iterator = iterator;
 
             Reset();
@@ -102,7 +102,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
 
             this.Current = newItem;
             
-            _queueDesiredValuesContainer.MoveNext();
+            _desiredValuesContainer.MoveNext();
 
             return result;
         }
@@ -114,7 +114,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
             _workQueue = new ConcurrentQueue<IDataItem>();
 
             _iterator.Reset();
-            _queueDesiredValuesContainer.Reset();
+            _desiredValuesContainer.Reset();
 
             StartWork();
         }
@@ -131,6 +131,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
                 _abortEvent.Dispose();
 
                 _iterator.Dispose();
+                _desiredValuesContainer.Reset();
             }
         }
 
@@ -185,7 +186,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
                     }
 
                     _bgQueue.Enqueue(i);
-                    _queueDesiredValuesContainer.SetValues(i.Output);
+                    _desiredValuesContainer.SetValues(i.Output);
                 }
                 else
                 {

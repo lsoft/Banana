@@ -16,14 +16,14 @@ namespace Banana.Backpropagation.EpochTrainer
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
         private readonly IBackpropagationConfig _backpropagationConfig;
         private readonly IMLPPropagators _propagators;
-        private readonly IQueueDesiredValuesContainer _desiredValuesContainer;
+        private readonly IDesiredValuesContainer _desiredValuesContainer;
         private readonly Action _batchAwaiterAction;
 
         public DefaultEpochTrainer(
             ILearningAlgorithmConfig learningAlgorithmConfig,
             IBackpropagationConfig backpropagationConfig,
             IMLPPropagators propagators,
-            IQueueDesiredValuesContainer desiredValuesContainer,
+            IDesiredValuesContainer desiredValuesContainer,
             Action batchAwaiterAction
             )
         {

@@ -23,7 +23,6 @@ namespace Banana.Backpropagation.Algorithm
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
         private readonly ILearningRate _learningRate;
         private readonly IMLPPropagators _propagators;
-        private readonly IDesiredValuesContainer _desiredValuesContainer;
         private readonly IMLPContainerHelper _mlpContainerHelper;
         private readonly IArtifactContainer _artifactContainer;
         private readonly IValidation _validation;
@@ -33,7 +32,6 @@ namespace Banana.Backpropagation.Algorithm
             ILearningAlgorithmConfig learningAlgorithmConfig,
             ILearningRate learningRate,
             IMLPPropagators propagators,
-            IDesiredValuesContainer desiredValuesContainer,
             IMLPContainerHelper mlpContainerHelper,
             IArtifactContainer artifactContainer,
             IValidation validation,
@@ -51,10 +49,6 @@ namespace Banana.Backpropagation.Algorithm
             if (propagators == null)
             {
                 throw new ArgumentNullException("propagators");
-            }
-            if (desiredValuesContainer == null)
-            {
-                throw new ArgumentNullException("desiredValuesContainer");
             }
             if (mlpContainerHelper == null)
             {
@@ -75,7 +69,6 @@ namespace Banana.Backpropagation.Algorithm
             _learningAlgorithmConfig = learningAlgorithmConfig;
             _learningRate = learningRate;
             _propagators = propagators;
-            _desiredValuesContainer = desiredValuesContainer;
             _mlpContainerHelper = mlpContainerHelper;
             _artifactContainer = artifactContainer;
             _validation = validation;
@@ -148,7 +141,8 @@ namespace Banana.Backpropagation.Algorithm
                         string.Format(
                             "На последнем слое сети {1} нейронов, а у датасета OutputLength = {0}",
                             trainData.OutputLength,
-                            lastLayerTotalNeuronCount)
+                            lastLayerTotalNeuronCount
+                            )
                         );
                 }
 

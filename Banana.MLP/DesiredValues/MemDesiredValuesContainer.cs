@@ -1,5 +1,6 @@
 using System;
-using Banana.MLP.Configuration.Layer;
+using System.Collections.Generic;
+using Banana.Exception;
 using OpenCL.Net;
 using OpenCL.Net.Wrapper;
 using OpenCL.Net.Wrapper.Mem;
@@ -9,6 +10,12 @@ namespace Banana.MLP.DesiredValues
 {
     public class MemDesiredValuesContainer : IMemDesiredValuesContainer
     {
+        private readonly CLProvider _clProvider;
+        private readonly int _maxUnusedQueueSize;
+
+        private readonly Queue<MemFloat> _queue = new Queue<MemFloat>();
+        private readonly Queue<MemFloat> _unusedQueue = new Queue<MemFloat>();
+
         public MemFloat DesiredOutput
         {
             get;
@@ -17,24 +24,22 @@ namespace Banana.MLP.DesiredValues
 
         public MemDesiredValuesContainer(
             CLProvider clProvider,
-            ILayerConfiguration layerConfiguration
+            int maxUnusedQueueSize
             )
         {
             if (clProvider == null)
             {
                 throw new ArgumentNullException("clProvider");
             }
-            if (layerConfiguration == null)
+            if (maxUnusedQueueSize <= 0)
             {
-                throw new ArgumentNullException("layerConfiguration");
+                throw new ArgumentException("maxUnusedQueueSize <= 0");
             }
 
-            var outputLength = layerConfiguration.TotalNeuronCount;
+            throw new InvalidOperationException("Not tested! Please test extensively before use.");
 
-            this.DesiredOutput = clProvider.CreateFloatMem(
-                outputLength,
-                MemFlags.CopyHostPtr | MemFlags.ReadOnly
-                );
+            _clProvider = clProvider;
+            _maxUnusedQueueSize = maxUnusedQueueSize;
         }
 
         public void SetValues(float[] desiredValues)
@@ -48,8 +53,116 @@ namespace Banana.MLP.DesiredValues
                 throw new InvalidOperationException("desiredValues.Length != DesiredOutput.Array.Length");
             }
 
-            desiredValues.CopyTo(DesiredOutput.Array, 0);
-            DesiredOutput.Write(BlockModeEnum.NonBlocking);
+            MemFloat newMem;
+
+            if (_unusedQueue.Count > 0)
+            {
+                newMem = _unusedQueue.Dequeue();
+            }
+            else
+            {
+                newMem = _clProvider.CreateFloatMem(
+                    desiredValues.Length,
+                    MemFlags.CopyHostPtr | MemFlags.ReadOnly
+                    );
+            }
+
+            if (newMem.Array.Length != desiredValues.Length)
+            {
+                throw new BananaException(
+                    "Inconsistency detected",
+                    BananaErrorEnum.DataError
+                    );
+            }
+
+            desiredValues.CopyTo(newMem.Array, 0);
+
+            newMem.Write(BlockModeEnum.NonBlocking);
+
+            _queue.Enqueue(newMem);
+
+            Refresh(true);
         }
+
+        public bool MoveNext()
+        {
+            return
+                Refresh(false);
+        }
+
+        public void Reset()
+        {
+            var current = this.DesiredOutput;
+            if (current != null)
+            {
+                current.Dispose();
+            }
+
+            foreach (var mem in _queue)
+            {
+                mem.Dispose();
+            }
+
+            foreach (var mem in _unusedQueue)
+            {
+                mem.Dispose();
+            }
+
+            this.DesiredOutput = null;
+
+            _queue.Clear();
+            _unusedQueue.Clear();
+        }
+
+        private bool Refresh(
+            bool onlyIfEmpty
+            )
+        {
+            var result = false;
+
+            //определяем, нужно ли делать дело
+            var allowedtoProceed = false;
+            if (onlyIfEmpty)
+            {
+                if (DesiredOutput == null)
+                {
+                    allowedtoProceed = true;
+                }
+            }
+            else
+            {
+                allowedtoProceed = true;
+            }
+
+            if (allowedtoProceed)
+            {
+                if (_queue.Count > 0)
+                {
+                    //убираем актуальный мем
+                    if (DesiredOutput != null)
+                    {
+                        if (_unusedQueue.Count < _maxUnusedQueueSize)
+                        {
+                            _unusedQueue.Enqueue(DesiredOutput);
+                        }
+                        else
+                        {
+                            DesiredOutput.Dispose();
+                        }
+
+                        DesiredOutput = null;
+                    }
+
+                    //заменяем на новый мем
+                    DesiredOutput = _queue.Dequeue();
+
+                    result = true;
+                }
+            }
+
+            return
+                result;
+        }
+
     }
 }
