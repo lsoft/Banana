@@ -9,6 +9,26 @@ namespace Banana.MLP.ArtifactContainer
         private readonly string _rootFolder;
         private readonly ISerializationHelper _serializationHelper;
 
+        public IArtifactContainer Parent
+        {
+            get;
+            private set;
+        }
+
+        public SavelessArtifactContainer(
+            IArtifactContainer parent,
+            string rootFolder,
+            ISerializationHelper serializationHelper
+            ) : this(rootFolder, serializationHelper)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException("parent");
+            }
+
+            Parent = parent;
+        }
+
         public SavelessArtifactContainer(
             string rootFolder,
             ISerializationHelper serializationHelper
@@ -65,6 +85,7 @@ namespace Banana.MLP.ArtifactContainer
         {
             return 
                 new SavelessArtifactContainer(
+                    this,
                     _rootFolder,
                     _serializationHelper
                     );

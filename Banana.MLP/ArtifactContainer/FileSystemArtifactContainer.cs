@@ -9,6 +9,25 @@ namespace Banana.MLP.ArtifactContainer
         private readonly string _rootFolder;
         private readonly ISerializationHelper _serializationHelper;
 
+        public IArtifactContainer Parent
+        {
+            get;
+            private set;
+        }
+
+        public FileSystemArtifactContainer(
+            IArtifactContainer parent,
+            string rootFolder,
+            ISerializationHelper serializationHelper
+            ) : this(rootFolder, serializationHelper)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException("parent");
+            }
+            Parent = parent;
+        }
+
         public FileSystemArtifactContainer(
             string rootFolder,
             ISerializationHelper serializationHelper

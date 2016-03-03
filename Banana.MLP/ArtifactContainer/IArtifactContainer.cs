@@ -4,6 +4,11 @@ namespace Banana.MLP.ArtifactContainer
 {
     public interface IArtifactContainer : IArtifactReadContainer
     {
+        IArtifactContainer Parent
+        {
+            get;
+        }
+
         void SaveString(string message, string resourceName);
 
         void SaveSerialized<T>(T obj, string resourceName);

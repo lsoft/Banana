@@ -80,6 +80,8 @@
     <Compile Include="LearningConfig\LearningAlgorithmConfig.cs" />
     <Compile Include="Configuration\MLP\IMLPConfiguration.cs" />
     <Compile Include="Configuration\MLP\MLPConfiguration.cs" />
+    <Compile Include="MLPContainer\IMLPContainerHelper.cs" />
+    <Compile Include="MLPContainer\MLPContainerHelper.cs" />
     <Compile Include="Propagator\Layer\ILayerPropagator.cs" />
     <Compile Include="Propagator\MLP\IMLPPropagator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
