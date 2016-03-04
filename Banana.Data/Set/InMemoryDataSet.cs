@@ -60,14 +60,14 @@ namespace Banana.Data.Set
                     BananaErrorEnum.DataError
                     );
             }
-            if (_dataList.Select(j => j.Input).Distinct().Count() != 1)
+            if (dataList.Select(j => j.InputLength).Distinct().Count() != 1)
             {
                 throw new BananaException(
                     "Incoming data list has no consistency in input array.",
                     BananaErrorEnum.DataError
                     );
             }
-            if (_dataList.Select(j => j.Output).Distinct().Count() != 1)
+            if (dataList.Select(j => j.OutputLength).Distinct().Count() != 1)
             {
                 throw new BananaException(
                     "Incoming data list has no consistency in output array.",

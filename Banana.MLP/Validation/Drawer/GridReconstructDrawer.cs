@@ -58,9 +58,9 @@ namespace Banana.MLP.Validation.Drawer
                 throw new InvalidOperationException("Установить размер можно только один раз");
             }
 
-            var seed = RandomHelper.GetRandomInt();
+            var seed = Math.Abs(RandomHelper.GetRandomInt());
 
-            _startIndex = seed * (Math.Min(_validationData.Count, netResultCount) - _visualizeCount);
+            _startIndex = Math.Max(0, seed * (Math.Min(_validationData.Count, netResultCount) - _visualizeCount));
             _currentIndex = 0;
             _validationDataIterator = _validationData.StartIterate();
             _visualizer = _visualizerFactory.CreateVisualizer(

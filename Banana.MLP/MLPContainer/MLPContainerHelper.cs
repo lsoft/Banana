@@ -6,6 +6,7 @@ using Banana.MLP.Container.MLP;
 
 namespace Banana.MLP.MLPContainer
 {
+    [Serializable]
     public class MLPContainerHelper : IMLPContainerHelper
     {
         public MLPContainerHelper(

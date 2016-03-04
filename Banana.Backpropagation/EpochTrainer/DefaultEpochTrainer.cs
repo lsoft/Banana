@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Banana.Backpropagation.Config;
 using Banana.Backpropagation.Propagators;
 using Banana.Common;
 using Banana.Common.Ambient;
 using Banana.Common.Others;
+using Banana.Data.Item;
 using Banana.Data.Set;
 using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.DesiredValues;
@@ -70,143 +73,107 @@ namespace Banana.Backpropagation.EpochTrainer
             using (var iterator = data.StartIterate())
             using (var qiterator = new DesiredValuesContainerIterator(_backpropagationConfig.ItemCountCacheSize, _desiredValuesContainer, iterator))
             {
-                foreach (var batch in qiterator.LazySplit(_learningAlgorithmConfig.BatchSize))
+                if (_learningAlgorithmConfig.BatchSize == 1)
                 {
-                    var batchProcessedItemCount = 0;
-                    foreach (var trainDataItem in batch)
+                    //online mode
+                    //use batch colection variable as a singleton for optimization purposes
+
+                    var batch = new List<IDataItem>(1);
+                    batch.Add(null);
+
+                    while (qiterator.MoveNext())
                     {
-                        var firstItemInBatch = batchProcessedItemCount == 0;
+                        batch[0] = qiterator.Current;
 
-                        #region -> and <- propagate
-
-                        _propagators.ForwardPropagator.Propagate(trainDataItem);
-
-                        _desiredValuesContainer.SetValues(trainDataItem.Output);
-
-                        _propagators.Backpropagator.Backpropagate(
+                        ProcessBatch(
+                            batch,
+                            data.Count,
                             learningRate,
-                            firstItemInBatch
+                            ref totalProcessedItemCount
                             );
-
-                        #endregion
-
-                        #region logging
-
-                        const int ItemCountBetweenLogs = 100;
-
-                        var logStep = data.Count/ItemCountBetweenLogs;
-                        if (logStep > 0 && totalProcessedItemCount%logStep == 0)
-                        {
-                            ConsoleAmbientContext.Console.Write(
-                                "Epoche progress: {0}%, {1}      ",
-                                ((long) totalProcessedItemCount*100/data.Count),
-                                DateTime.Now.ToString()
-                                );
-
-                            ConsoleAmbientContext.Console.ReturnCarriage();
-                        }
-
-                        #endregion
-
-                        batchProcessedItemCount++;
-                        totalProcessedItemCount++;
                     }
-
-                    #region update weights and bias
-
-                    if (batchProcessedItemCount > 0)
-                    {
-                        _propagators.UpdateNeuronExecutor.Execute();
-                    }
-
-                    #endregion
-
-                    //Make sure we're done with everything that's been requested before
-                    _batchAwaiterAction();
                 }
-            }
-
-            /*
-            //process data set
-            using (var enumerator = data.StartIterate())
-            {
-                var allowedToContinue = true;
-                for (
-                    var currentIndex = 0;
-                    allowedToContinue;
-                    currentIndex += _learningAlgorithmConfig.BatchSize
-                    )
+                else
                 {
-                    var batchProcessedItemCount = 0;
+                    //batch mode
 
-                    //process one batch
-                    for (
-                        var inBatchIndex = 0;
-                        inBatchIndex < _learningAlgorithmConfig.BatchSize && allowedToContinue;
-                        ++inBatchIndex
-                        )
+                    foreach (var batch in qiterator.LazySplit(_learningAlgorithmConfig.BatchSize))
                     {
-                        allowedToContinue = enumerator.MoveNext();
-                        if (allowedToContinue)
-                        {
-                            var firstItemInBatch = inBatchIndex == 0;
-
-                            var trainDataItem = enumerator.Current;
-
-                            #region -> and <- propagate
-
-                            _propagators.ForwardPropagator.Propagate(trainDataItem);
-
-                            _desiredValuesContainer.SetValues(trainDataItem.Output);
-
-                            _propagators.Backpropagator.Backpropagate(
-                                learningRate,
-                                firstItemInBatch
-                                );
-
-                            #endregion
-
-                            #region logging
-
-                            const int ItemCountBetweenLogs = 100;
-
-                            var logStep = data.Count / ItemCountBetweenLogs;
-                            if (logStep > 0 && currentIndex % logStep == 0)
-                            {
-                                ConsoleAmbientContext.Console.Write(
-                                    "Epoche progress: {0}%, {1}      ",
-                                    ((long)currentIndex * 100 / data.Count),
-                                    DateTime.Now.ToString()
-                                    );
-
-                                ConsoleAmbientContext.Console.ReturnCarriage();
-                            }
-
-                            #endregion
-
-                            batchProcessedItemCount++;
-                        }
+                        ProcessBatch(
+                            batch,
+                            data.Count,
+                            learningRate,
+                            ref totalProcessedItemCount
+                            );
                     }
-
-                    #region update weights and bias
-
-                    if (batchProcessedItemCount > 0)
-                    {
-                        _propagators.UpdateNeuronExecutor.Execute();
-                    }
-
-                    #endregion
-
-                    //Make sure we're done with everything that's been requested before
-                    _batchAwaiterAction();
                 }
             }
-            //*/
 
             ConsoleAmbientContext.Console.Write(new string(' ', 60));
             ConsoleAmbientContext.Console.ReturnCarriage();
 
             //конец эпохи обучения
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ProcessBatch(
+            List<IDataItem> batch,
+            int dataCount,
+            float learningRate,
+            ref int totalProcessedItemCount
+            )
+        {
+            var batchProcessedItemCount = 0;
+            foreach (var trainDataItem in batch)
+            {
+                var firstItemInBatch = batchProcessedItemCount == 0;
+
+                #region -> and <- propagate
+
+                _propagators.ForwardPropagator.Propagate(trainDataItem);
+
+                _desiredValuesContainer.SetValues(trainDataItem.Output);
+
+                _propagators.Backpropagator.Backpropagate(
+                    learningRate,
+                    firstItemInBatch
+                    );
+
+                #endregion
+
+                #region logging
+
+                const int ItemCountBetweenLogs = 100;
+
+                var logStep = dataCount/ItemCountBetweenLogs;
+                if (logStep > 0 && totalProcessedItemCount%logStep == 0)
+                {
+                    ConsoleAmbientContext.Console.Write(
+                        "Epoche progress: {0}%, {1}      ",
+                        ((long) totalProcessedItemCount*100/dataCount),
+                        DateTime.Now.ToString()
+                        );
+
+                    ConsoleAmbientContext.Console.ReturnCarriage();
+                }
+
+                #endregion
+
+                batchProcessedItemCount++;
+                totalProcessedItemCount++;
+            }
+
+            #region update weights and bias
+
+            if (batchProcessedItemCount > 0)
+            {
+                _propagators.UpdateNeuronExecutor.Execute();
+            }
+
+            #endregion
+
+            //Make sure we're done with everything that's been requested before
+            _batchAwaiterAction();
         }
     }
 }

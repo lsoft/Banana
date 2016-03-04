@@ -20,7 +20,7 @@ namespace Banana.MLP.Tests.Metrics
                 throw new ArgumentNullException("metric");
             }
 
-            randomProvider = randomProvider ?? new Func<Random, float>((random) => (float) (random.NextDouble()*2 - 0.5f));
+            randomProvider = randomProvider ?? ((random) => (float) (random.NextDouble()*2 - 0.5f));
 
             const int length = 97;
             const string methodName = "CalculateMetric";

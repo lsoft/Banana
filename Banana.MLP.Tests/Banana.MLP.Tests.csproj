@@ -78,7 +78,6 @@
     <Compile Include="Function\OpenCL\Value\RLUOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SigmoidOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SparsifierOpenCLFixture.cs" />
-    <Compile Include="Layer\DeDzCalculator\CSharp\CSharpOutputLayerDeDzCalculatorFixture.cs" />
     <Compile Include="Layer\Propagator\CSharp\CSharpLayerPropagatorFixture.cs" />
     <Compile Include="Metrics\HalfSquaredEuclidianDistanceFixture.cs" />
     <Compile Include="Metrics\LogLikelihoodFixture.cs" />

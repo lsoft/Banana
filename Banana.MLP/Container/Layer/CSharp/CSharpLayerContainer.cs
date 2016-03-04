@@ -1,9 +1,12 @@
 ﻿using System;
+using Banana.Common.LayerState;
+using Banana.Common.Others;
 using Banana.Data.Item;
 using Banana.MLP.Configuration.Layer;
 
 namespace Banana.MLP.Container.Layer.CSharp
 {
+    [Serializable]
     public class CSharpLayerContainer : ICSharpLayerContainer
     {
         public ILayerConfiguration Configuration
@@ -167,6 +170,34 @@ namespace Banana.MLP.Container.Layer.CSharp
             }
         }
 
+        public ILayerState GetState()
+        {
+            var ls = new LayerState(
+                this.StateMem.CloneArray(),
+                Configuration.TotalNeuronCount
+                );
+
+            return ls;
+        }
+
+        public void InitRandom(
+            Random rnd
+            )
+        {
+            if (this.WeightMem != null)
+            {
+                for (var i = 0; i < this.WeightMem.Length; i++)
+                {
+                    this.WeightMem[i] = (float)rnd.NextDouble() * .2f - .1f;
+                }
+
+                for (var i = 0; i < this.BiasMem.Length; i++)
+                {
+                    this.BiasMem[i] = (float)rnd.NextDouble() * 2f - 1f;
+                }
+            }
+        }
+
         /*
         public void ReadWeightsAndBiasesFromLayer(ILayer layer)
         {
@@ -217,17 +248,7 @@ namespace Banana.MLP.Container.Layer.CSharp
             }
         }
 
-        public ILayerState GetLayerState()
-        {
-            var ls = new LayerState(
-                this.StateMem.CloneArray(),
-                Configuration.TotalNeuronCount
-                );
-
-            return ls;
-        }
-        
+       
         */
-
     }
 }

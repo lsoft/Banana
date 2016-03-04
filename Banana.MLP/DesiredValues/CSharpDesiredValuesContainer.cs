@@ -19,9 +19,6 @@ namespace Banana.MLP.DesiredValues
             )
         {
             DesiredOutput = null;
-
-            throw new InvalidOperationException("Not tested! Please test extensively before use.");
-
         }
 
         public void SetValues(float[] desiredValues)

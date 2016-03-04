@@ -55,6 +55,7 @@
     <Compile Include="Set\IDataSetIterator.cs" />
     <Compile Include="Set\InMemoryDataSet.cs" />
     <Compile Include="Iterator\InMemoryDataSetIterator.cs" />
+    <Compile Include="Set\AutoencoderDataSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">

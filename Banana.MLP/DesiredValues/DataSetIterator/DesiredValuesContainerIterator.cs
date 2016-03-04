@@ -69,8 +69,6 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
                 throw new ArgumentException("cacheSize < 1");
             }
 
-            throw new InvalidOperationException("Not tested! Please test extensively before use.");
-
             _cacheSize = cacheSize;
             _desiredValuesContainer = desiredValuesContainer;
             _iterator = iterator;

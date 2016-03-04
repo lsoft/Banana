@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using Banana.Common.LayerState;
@@ -61,7 +62,7 @@ namespace Banana.MLP.Classic.ForwardPropagation.MLP
                 throw new ArgumentNullException("item");
             }
 
-            var inputLayer = ForwardPropagators[0].LayerContainer;
+            var inputLayer = MLPContainer.Layers[0];
 
             inputLayer.ReadInput(item);
 
@@ -78,7 +79,23 @@ namespace Banana.MLP.Classic.ForwardPropagation.MLP
             out TimeSpan propagationTime
             )
         {
-            throw new NotImplementedException();
+            var result = new List<ILayerState>();
+
+            var before = DateTime.Now;
+
+            foreach (var item in itemList)
+            {
+                Propagate(item);
+
+                var layerState = MLPContainer.LastLayer.GetState();
+                result.Add(layerState);
+            }
+
+            var after = DateTime.Now;
+            propagationTime = after - before;
+
+            return
+                result;
         }
     }
 }

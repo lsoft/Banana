@@ -1,8 +1,10 @@
-﻿using Banana.MLP.Dim;
+﻿using System;
+using Banana.MLP.Dim;
 using Banana.MLP.Function;
 
 namespace Banana.MLP.Configuration.Layer
 {
+    [Serializable]
     public class InputLayerConfiguration : ILayerConfiguration
     {
         public LayerTypeEnum Type

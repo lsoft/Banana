@@ -11,6 +11,7 @@ using Banana.MLP.MLPContainer;
 
 namespace Banana.MLP.Container.MLP
 {
+    [Serializable]
     public class CSharpMLPContainer : IMLPContainer<CSharpLayerContainer>
     {
         private readonly IMLPContainerHelper _mlpContainerHelper;
@@ -27,12 +28,25 @@ namespace Banana.MLP.Container.MLP
             private set;
         }
 
+        public CSharpLayerContainer LastLayer
+        {
+            get
+            {
+                if (Layers.Length == 0)
+                {
+                    return null;
+                }
+
+                return
+                    Layers[Layers.Length - 1];
+            }
+        }
+
         public CSharpMLPContainer(
             IMLPConfiguration configuration,
             IMLPContainerHelper mlpContainerHelper
             )
         {
-            _mlpContainerHelper = mlpContainerHelper;
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");
@@ -41,6 +55,8 @@ namespace Banana.MLP.Container.MLP
             {
                 throw new ArgumentNullException("mlpContainerHelper");
             }
+
+            _mlpContainerHelper = mlpContainerHelper;
 
             Configuration = configuration;
 
@@ -54,6 +70,16 @@ namespace Banana.MLP.Container.MLP
                     configuration.Layers[cc - 1],
                     configuration.Layers[cc]
                     );
+            }
+        }
+
+        public void InitRandom(
+            Random rnd
+            )
+        {
+            foreach (var l in Layers)
+            {
+                l.InitRandom(rnd);
             }
         }
 

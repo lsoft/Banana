@@ -1,3 +1,4 @@
+using System;
 using Banana.MLP.AccuracyRecord;
 using Banana.MLP.ArtifactContainer;
 using Banana.MLP.Configuration.MLP;
@@ -16,6 +17,10 @@ namespace Banana.MLP.Container.MLP
             IArtifactContainer artifactContainer,
             IAccuracyRecord accuracyRecord
             );
+
+        void InitRandom(
+            Random rnd
+            );
     }
 
     public interface IMLPContainer<T> : IMLPContainer
@@ -23,6 +28,11 @@ namespace Banana.MLP.Container.MLP
     {
 
         T[] Layers
+        {
+            get;
+        }
+
+        T LastLayer
         {
             get;
         }

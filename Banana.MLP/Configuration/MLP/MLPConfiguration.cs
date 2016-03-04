@@ -4,6 +4,7 @@ using Banana.MLP.Configuration.Layer;
 
 namespace Banana.MLP.Configuration.MLP
 {
+    [Serializable]
     public class MLPConfiguration : IMLPConfiguration
     {
         public string Name

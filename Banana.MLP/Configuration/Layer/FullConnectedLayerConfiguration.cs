@@ -4,6 +4,7 @@ using Banana.MLP.Function;
 
 namespace Banana.MLP.Configuration.Layer
 {
+    [Serializable]
     public class FullConnectedLayerConfiguration : ILayerConfiguration
     {
         public LayerTypeEnum Type
