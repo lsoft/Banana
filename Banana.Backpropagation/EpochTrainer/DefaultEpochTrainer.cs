@@ -12,19 +12,18 @@ using Banana.MLP.LearningConfig;
 
 namespace Banana.Backpropagation.EpochTrainer
 {
-    public class DefaultEpochTrainer<T> : IEpochTrainer
-        where T : ILayerContainer
+    public class DefaultEpochTrainer : IEpochTrainer
     {
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
         private readonly IBackpropagationConfig _backpropagationConfig;
-        private readonly IMLPPropagators<T> _propagators;
+        private readonly IMLPPropagators _propagators;
         private readonly IDesiredValuesContainer _desiredValuesContainer;
         private readonly Action _batchAwaiterAction;
 
         public DefaultEpochTrainer(
             ILearningAlgorithmConfig learningAlgorithmConfig,
             IBackpropagationConfig backpropagationConfig,
-            IMLPPropagators<T> propagators,
+            IMLPPropagators propagators,
             IDesiredValuesContainer desiredValuesContainer,
             Action batchAwaiterAction
             )

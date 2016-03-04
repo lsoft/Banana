@@ -45,7 +45,7 @@ namespace Banana.MLP.Configuration.MLP
             Layers = layers;
         }
 
-        public string GetLayerInformation()
+        public string GetMLPScheme()
         {
             return
                 string.Join(" -> ", this.Layers.ToList().ConvertAll(j => j.GetLayerInformation()));

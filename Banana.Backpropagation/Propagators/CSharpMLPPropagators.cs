@@ -22,15 +22,15 @@ using Banana.MLP.Propagator.MLP;
 
 namespace Banana.Backpropagation.Propagators
 {
-    public class CSharpMLPPropagators : IMLPPropagators<CSharpLayerContainer>
+    public class CSharpMLPPropagators : IMLPPropagators
     {
-        public IMLPContainer<CSharpLayerContainer> MLPContainer
+        public IMLPContainer MLPContainer
         {
             get;
             private set;
         }
 
-        public IMLPPropagator<CSharpLayerContainer> ForwardPropagator
+        public IMLPPropagator ForwardPropagator
         {
             get;
             private set;

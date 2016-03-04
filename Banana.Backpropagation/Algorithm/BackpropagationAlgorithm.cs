@@ -19,13 +19,11 @@ using Banana.MLP.Validation;
 
 namespace Banana.Backpropagation.Algorithm
 {
-    public class BackpropagationAlgorithm<T>
-        where T : ILayerContainer
+    public class BackpropagationAlgorithm
     {
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
         private readonly ILearningRate _learningRate;
-        private readonly IMLPPropagators<T> _propagators;
-        private readonly IMLPContainerHelper _mlpContainerHelper;
+        private readonly IMLPPropagators _propagators;
         private readonly IArtifactContainer _artifactContainer;
         private readonly IValidation _validation;
         private readonly IEpochTrainer _epochTrainer;
@@ -33,8 +31,7 @@ namespace Banana.Backpropagation.Algorithm
         public BackpropagationAlgorithm(
             ILearningAlgorithmConfig learningAlgorithmConfig,
             ILearningRate learningRate,
-            IMLPPropagators<T> propagators,
-            IMLPContainerHelper mlpContainerHelper,
+            IMLPPropagators propagators,
             IArtifactContainer artifactContainer,
             IValidation validation,
             IEpochTrainer epochTrainer
@@ -52,10 +49,6 @@ namespace Banana.Backpropagation.Algorithm
             {
                 throw new ArgumentNullException("propagators");
             }
-            if (mlpContainerHelper == null)
-            {
-                throw new ArgumentNullException("mlpContainerHelper");
-            }
             if (artifactContainer == null)
             {
                 throw new ArgumentNullException("artifactContainer");
@@ -68,10 +61,10 @@ namespace Banana.Backpropagation.Algorithm
             {
                 throw new ArgumentNullException("epochTrainer");
             }
+
             _learningAlgorithmConfig = learningAlgorithmConfig;
             _learningRate = learningRate;
             _propagators = propagators;
-            _mlpContainerHelper = mlpContainerHelper;
             _artifactContainer = artifactContainer;
             _validation = validation;
             _epochTrainer = epochTrainer;
@@ -88,7 +81,7 @@ namespace Banana.Backpropagation.Algorithm
 
             ConsoleAmbientContext.Console.WriteLine(
                 "BACKPROPAGATION STARTED WITH {0}",
-                _propagators.MLPContainer.Configuration.GetLayerInformation()
+                _propagators.MLPContainer.Configuration.GetMLPScheme()
                 );
 
             #region валидируем дефолтовую сеть
@@ -136,7 +129,7 @@ namespace Banana.Backpropagation.Algorithm
                 //запрашиваем данные (уже перемешанные)
                 var trainData = dataSetProvider.GetDataSet(epochNumber);
 
-                var lastLayerTotalNeuronCount = _propagators.MLPContainer.Layers.Last().Configuration.TotalNeuronCount;
+                var lastLayerTotalNeuronCount = _propagators.MLPContainer.Configuration.Layers.Last().TotalNeuronCount;
                 if (trainData.OutputLength != lastLayerTotalNeuronCount)
                 {
                     ConsoleAmbientContext.Console.WriteWarning(
@@ -226,9 +219,8 @@ namespace Banana.Backpropagation.Algorithm
                 {
                     result = epocheAccuracyRecord;
 
-                    _mlpContainerHelper.Save(
+                    _propagators.MLPContainer.Save(
                         epocheContainer,
-                        _propagators.MLPContainer,
                         epocheAccuracyRecord
                         );
                 }

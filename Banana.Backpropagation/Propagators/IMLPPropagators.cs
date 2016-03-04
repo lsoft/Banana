@@ -11,15 +11,14 @@ using Banana.MLP.Propagator.MLP;
 
 namespace Banana.Backpropagation.Propagators
 {
-    public interface IMLPPropagators<T>
-        where T : ILayerContainer
+    public interface IMLPPropagators
     {
-        IMLPContainer<T> MLPContainer
+        IMLPContainer MLPContainer
         {
             get;
         }
 
-        IMLPPropagator<T> ForwardPropagator
+        IMLPPropagator ForwardPropagator
         {
             get;
         }

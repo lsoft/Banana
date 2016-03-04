@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Banana.MLP.AccuracyRecord;
+using Banana.MLP.ArtifactContainer;
 using Banana.MLP.Configuration.MLP;
 using Banana.MLP.Container.Layer.CSharp;
+using Banana.MLP.MLPContainer;
 
 namespace Banana.MLP.Container.MLP
 {
     public class CSharpMLPContainer : IMLPContainer<CSharpLayerContainer>
     {
+        private readonly IMLPContainerHelper _mlpContainerHelper;
+
         public IMLPConfiguration Configuration
         {
             get;
@@ -23,12 +28,18 @@ namespace Banana.MLP.Container.MLP
         }
 
         public CSharpMLPContainer(
-            IMLPConfiguration configuration
+            IMLPConfiguration configuration,
+            IMLPContainerHelper mlpContainerHelper
             )
         {
+            _mlpContainerHelper = mlpContainerHelper;
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");
+            }
+            if (mlpContainerHelper == null)
+            {
+                throw new ArgumentNullException("mlpContainerHelper");
             }
 
             Configuration = configuration;
@@ -44,6 +55,27 @@ namespace Banana.MLP.Container.MLP
                     configuration.Layers[cc]
                     );
             }
+        }
+
+        public void Save(
+            IArtifactContainer artifactContainer,
+            IAccuracyRecord accuracyRecord
+            )
+        {
+            if (artifactContainer == null)
+            {
+                throw new ArgumentNullException("artifactContainer");
+            }
+            if (accuracyRecord == null)
+            {
+                throw new ArgumentNullException("accuracyRecord");
+            }
+
+            _mlpContainerHelper.Save(
+                artifactContainer,
+                this,
+                accuracyRecord
+                );
         }
     }
 }

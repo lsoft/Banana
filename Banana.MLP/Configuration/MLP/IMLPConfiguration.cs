@@ -14,6 +14,6 @@ namespace Banana.MLP.Configuration.MLP
             get;
         }
 
-        string GetLayerInformation();
+        string GetMLPScheme();
     }
 }
