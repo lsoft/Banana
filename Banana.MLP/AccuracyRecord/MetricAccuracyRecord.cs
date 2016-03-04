@@ -18,7 +18,8 @@ namespace Banana.MLP.AccuracyRecord
 
         public MetricAccuracyRecord(
             int epocheNumber,
-            float validationPerItemError)
+            float validationPerItemError
+            )
         {
             _epocheNumber = epocheNumber;
             _validationPerItemError = validationPerItemError;

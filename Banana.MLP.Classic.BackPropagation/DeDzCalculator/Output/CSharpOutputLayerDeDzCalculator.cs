@@ -41,14 +41,14 @@ namespace Banana.MLP.Classic.BackPropagation.DeDzCalculator.Output
         {
             ForHelper.ForBetween(0, _currentLayerContainer.Configuration.TotalNeuronCount, neuronIndex =>
             {
-                float z = _currentLayerContainer.NetMem[neuronIndex];
-                float dydz = _currentLayerContainer.Configuration.LayerActivationFunction.ComputeFirstDerivative(z);
-
                 float dedy = _learningAlgorithmConfig.TargetMetrics.CalculatePartialDerivativeByV2Index(
                     _currentLayerContainer.StateMem,
                     _desiredValuesContainer.DesiredOutput,
                     neuronIndex
                     );
+
+                float z = _currentLayerContainer.NetMem[neuronIndex];
+                float dydz = _currentLayerContainer.Configuration.LayerActivationFunction.ComputeFirstDerivative(z);
 
                 float dedz = dedy * dydz;
 

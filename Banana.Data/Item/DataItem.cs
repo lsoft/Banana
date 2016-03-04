@@ -13,6 +13,22 @@ namespace Banana.Data.Item
         private readonly float[] _input;
         private readonly float[] _output;
 
+        public float[] Input
+        {
+            get
+            {
+                return _input;
+            }
+        }
+
+        public float[] Output
+        {
+            get
+            {
+                return _output;
+            }
+        }
+
         public int InputLength
         {
             get
@@ -79,20 +95,5 @@ namespace Banana.Data.Item
             _output = output;
         }
 
-        public float[] Input
-        {
-            get
-            {
-                return _input;
-            }
-        }
-
-        public float[] Output
-        {
-            get
-            {
-                return _output;
-            }
-        }
     }
 }

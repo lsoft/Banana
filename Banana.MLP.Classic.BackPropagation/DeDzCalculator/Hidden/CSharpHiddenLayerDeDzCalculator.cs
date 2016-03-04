@@ -30,6 +30,7 @@ namespace Banana.MLP.Classic.BackPropagation.DeDzCalculator.Hidden
                 float dydz = _currentLayerContainer.Configuration.LayerActivationFunction.ComputeFirstDerivative(z);
                 
                 var dedz = dedy * dydz;
+
                 _currentLayerContainer.DeDz[neuronIndex] = dedz;
             }
             ); //ForHelper.ForBetween

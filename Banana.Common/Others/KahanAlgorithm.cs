@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Banana.Common.Others
@@ -26,6 +27,7 @@ namespace Banana.Common.Others
                 this._c = 0f;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Add(
                 float dataItem
                 )
@@ -44,6 +46,7 @@ namespace Banana.Common.Others
 
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Sum(
             int dataCount,
             Func<int, float> floatProvider
@@ -69,6 +72,7 @@ namespace Banana.Common.Others
                 tempArray.Sum();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Sum(
             this float[] data
             )

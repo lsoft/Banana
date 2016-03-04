@@ -10,6 +10,7 @@ namespace Banana.MLP.Function
         }
 
         float Compute(float x);
+
         float ComputeFirstDerivative(float x);
 
         /// <summary>

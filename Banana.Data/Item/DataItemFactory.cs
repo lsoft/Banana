@@ -6,7 +6,8 @@ namespace Banana.Data.Item
     {
         public IDataItem CreateDataItem(
             float[] input,
-            float[] output)
+            float[] output
+            )
         {
             if (input == null)
             {
@@ -20,7 +21,8 @@ namespace Banana.Data.Item
             return
                 new DataItem(
                     input,
-                    output);
+                    output
+                    );
         }
     }
 }

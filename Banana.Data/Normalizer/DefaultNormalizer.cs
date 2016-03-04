@@ -52,8 +52,10 @@ namespace Banana.Data.Normalizer
             //do remap
             for (var i = 0; i < dataToNormalize.Length; i++)
             {
-                dataToNormalize[i] -= mean0;
-                dataToNormalize[i] /= sqrtVariance;
+                dataToNormalize[i] = (dataToNormalize[i] - mean0)/sqrtVariance;
+
+                //dataToNormalize[i] -= mean0;
+                //dataToNormalize[i] /= sqrtVariance;
             }
         }
     }

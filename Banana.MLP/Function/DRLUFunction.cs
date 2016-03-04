@@ -16,7 +16,7 @@ namespace Banana.MLP.Function
         {
             get
             {
-                return "IRLU";
+                return "DRLU";
             }
         }
 
