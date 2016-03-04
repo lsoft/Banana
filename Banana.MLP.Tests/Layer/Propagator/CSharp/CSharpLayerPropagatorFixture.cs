@@ -160,7 +160,8 @@ namespace Banana.MLP.Tests.LayerPropagator.CSharp
             out FullConnectedLayerConfiguration l,
             out CSharpLayerContainer plc,
             out CSharpLayerContainer clc,
-            out CSharpLayerPropagator lp)
+            out CSharpLayerPropagator lp
+            )
         {
             l = new FullConnectedLayerConfiguration(
                 new Dimension(1, currentLayerNeuronCount),

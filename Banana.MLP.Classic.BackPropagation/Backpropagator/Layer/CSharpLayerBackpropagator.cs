@@ -41,8 +41,6 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.Layer
             bool firstItemInBatch
             )
         {
-            _deDyAggregator.Aggregate();
-
             _deDzCalculator.Calculate();
 
             if (firstItemInBatch)
@@ -53,6 +51,8 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.Layer
             {
                 _updateNablaExecutor.CalculateIncrement(learningRate);
             }
+
+            _deDyAggregator.Aggregate();
         }
     }
 }

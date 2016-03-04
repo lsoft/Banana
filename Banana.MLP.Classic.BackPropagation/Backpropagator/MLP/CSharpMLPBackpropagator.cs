@@ -9,6 +9,7 @@ using Banana.MLP.Classic.BackPropagation.Backpropagator.Layer;
 using Banana.MLP.Classic.BackPropagation.DeDyAggregator;
 using Banana.MLP.Classic.BackPropagation.DeDzCalculator;
 using Banana.MLP.Classic.BackPropagation.DeDzCalculator.Hidden;
+using Banana.MLP.Classic.BackPropagation.DeDzCalculator.Output;
 using Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor;
 using Banana.MLP.Classic.BackPropagation.UpdateNeuronExecutor;
 using Banana.MLP.Container.Layer.CSharp;
@@ -46,6 +47,8 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.MLP
             }
 
             BackPropagators = new ILayerBackpropagator[mlpContainer.Layers.Length];
+
+            //hidden layes
             for (var layerIndex = 1; layerIndex < mlpContainer.Layers.Length; layerIndex++)
             {
                 var previousLayerContainer = mlpContainer.Layers[layerIndex - 1];
@@ -56,9 +59,28 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.MLP
                     currentLayerContainer
                     );
 
-                IDeDzCalculator deDzCalculator = new CSharpHiddenLayerDeDzCalculator(
-                    currentLayerContainer
-                    );
+                IDeDzCalculator deDzCalculator;
+                if (layerIndex == (mlpContainer.Layers.Length - 1))
+                {
+                    //last layer
+
+                    deDzCalculator = new CSharpOutputLayerDeDzCalculator(
+                        learningAlgorithmConfig,
+                        currentLayerContainer,
+                        desiredValuesContainer
+                        );
+                }
+                else
+                {
+                    //hidden layer
+
+                    var nextLayerContainer = mlpContainer.Layers[layerIndex + 1];
+
+                    deDzCalculator = new CSharpHiddenLayerDeDzCalculator(
+                        currentLayerContainer,
+                        nextLayerContainer
+                        );
+                }
 
                 IUpdateNablaExecutor updateNablaExecutor = new CSharpUpdateNablaExecutor(
                     previousLayerContainer,
@@ -71,7 +93,6 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.MLP
                     deDzCalculator,
                     updateNablaExecutor
                     );
-
             }
         }
 

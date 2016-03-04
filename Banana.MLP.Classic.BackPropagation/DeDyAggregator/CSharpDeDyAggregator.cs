@@ -56,8 +56,7 @@ namespace Banana.MLP.Classic.BackPropagation.DeDyAggregator
                 }
 
                 _aggregateLayerContainer.DeDy[previousLayerNeuronIndex] = accDeDy.Sum;
-            }
-                ); //ForHelper.ForBetween
+            }); //ForHelper.ForBetween
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

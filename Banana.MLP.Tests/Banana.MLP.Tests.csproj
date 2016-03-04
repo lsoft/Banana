@@ -16,6 +16,8 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OpenCL.Net, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCL.Net.2.2.9.0\lib\net40\OpenCL.Net.dll</HintPath>
       <Private>True</Private>
@@ -72,7 +78,8 @@
     <Compile Include="Function\OpenCL\Value\RLUOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SigmoidOpenCLFixture.cs" />
     <Compile Include="Function\OpenCL\Value\SparsifierOpenCLFixture.cs" />
-    <Compile Include="LayerPropagator\CSharp\CSharpLayerPropagatorFixture.cs" />
+    <Compile Include="Layer\DeDzCalculator\CSharp\CSharpOutputLayerDeDzCalculatorFixture.cs" />
+    <Compile Include="Layer\Propagator\CSharp\CSharpLayerPropagatorFixture.cs" />
     <Compile Include="Metrics\HalfSquaredEuclidianDistanceFixture.cs" />
     <Compile Include="Metrics\LogLikelihoodFixture.cs" />
     <Compile Include="Metrics\MetricTester.cs" />
@@ -87,6 +94,10 @@
     <ProjectReference Include="..\Banana.Common\Banana.Common.csproj">
       <Project>{2AE49BB5-0303-44F9-9FDE-743D54D599A2}</Project>
       <Name>Banana.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Banana.MLP.Classic.BackPropagation\Banana.MLP.Classic.BackPropagation.csproj">
+      <Project>{0C352B9C-6BD0-4179-8683-4EEFE1BC2826}</Project>
+      <Name>Banana.MLP.Classic.BackPropagation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Banana.MLP.Classic.ForwardPropagation\Banana.MLP.Classic.ForwardPropagation.csproj">
       <Project>{5231DB37-CF38-40A2-B52A-93AA32384E5B}</Project>
@@ -130,7 +141,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets'))" />
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
