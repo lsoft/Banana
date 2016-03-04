@@ -1,6 +1,7 @@
 ﻿using System;
 using Banana.MLP.AccuracyRecord;
 using Banana.MLP.ArtifactContainer;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Container.MLP;
 
 namespace Banana.MLP.MLPContainer
@@ -12,11 +13,12 @@ namespace Banana.MLP.MLPContainer
         {
         }
 
-        public IMLPContainer Load<T>(
+        public T Load<T, U>(
             IArtifactContainer artifactContainer,
             string mlpName
             )
-            where T : IMLPContainer
+            where T : IMLPContainer<U>
+            where U : ILayerContainer
         {
             if (artifactContainer == null)
             {
@@ -29,11 +31,12 @@ namespace Banana.MLP.MLPContainer
         }
 
 
-        public void Save(
+        public void Save<T>(
             IArtifactContainer artifactContainer,
-            IMLPContainer mlp,
+            IMLPContainer<T> mlp,
             IAccuracyRecord accuracyRecord
             )
+            where T : ILayerContainer
         {
             if (artifactContainer == null)
             {

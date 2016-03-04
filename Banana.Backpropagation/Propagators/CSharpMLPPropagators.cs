@@ -14,6 +14,7 @@ using Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor;
 using Banana.MLP.Classic.BackPropagation.UpdateNeuronExecutor;
 using Banana.MLP.Classic.ForwardPropagation;
 using Banana.MLP.Classic.ForwardPropagation.MLP;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Container.MLP;
 using Banana.MLP.DesiredValues;
 using Banana.MLP.LearningConfig;
@@ -21,15 +22,15 @@ using Banana.MLP.Propagator.MLP;
 
 namespace Banana.Backpropagation.Propagators
 {
-    public class CSharpMLPPropagators : IMLPPropagators
+    public class CSharpMLPPropagators : IMLPPropagators<CSharpLayerContainer>
     {
-        public IMLPContainer MLPContainer
+        public IMLPContainer<CSharpLayerContainer> MLPContainer
         {
             get;
             private set;
         }
 
-        public IMLPPropagator ForwardPropagator
+        public IMLPPropagator<CSharpLayerContainer> ForwardPropagator
         {
             get;
             private set;
@@ -48,7 +49,7 @@ namespace Banana.Backpropagation.Propagators
         }
 
         public CSharpMLPPropagators(
-            IMLPContainer mlpContainer,
+            IMLPContainer<CSharpLayerContainer> mlpContainer,
             ICSharpDesiredValuesContainer desiredValuesContainer,
             ILearningAlgorithmConfig learningAlgorithmConfig
             )

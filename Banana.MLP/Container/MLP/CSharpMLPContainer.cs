@@ -8,7 +8,7 @@ using Banana.MLP.Container.Layer.CSharp;
 
 namespace Banana.MLP.Container.MLP
 {
-    public class CSharpMLPContainer : IMLPContainer
+    public class CSharpMLPContainer : IMLPContainer<CSharpLayerContainer>
     {
         public IMLPConfiguration Configuration
         {
@@ -16,7 +16,7 @@ namespace Banana.MLP.Container.MLP
             private set;
         }
 
-        public ILayerContainer[] Layers
+        public CSharpLayerContainer[] Layers
         {
             get;
             private set;
@@ -33,7 +33,7 @@ namespace Banana.MLP.Container.MLP
 
             Configuration = configuration;
 
-            Layers = new ILayerContainer[configuration.Layers.Length];
+            Layers = new CSharpLayerContainer[configuration.Layers.Length];
 
             Layers[0] = new CSharpLayerContainer(configuration.Layers[0]);
 

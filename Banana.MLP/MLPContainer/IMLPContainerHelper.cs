@@ -1,20 +1,25 @@
 ﻿using Banana.MLP.AccuracyRecord;
 using Banana.MLP.ArtifactContainer;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Container.MLP;
 
 namespace Banana.MLP.MLPContainer
 {
     public interface IMLPContainerHelper
     {
-        void Save(
+        T Load<T, U>(
             IArtifactContainer artifactContainer,
-            IMLPContainer mlp,
-            IAccuracyRecord accuracyRecord
-            );
-
-        IMLPContainer Load<T>(
-            IArtifactContainer artifactContainer, 
             string mlpName
-            ) where T : IMLPContainer;
+            )
+            where T : IMLPContainer<U>
+            where U : ILayerContainer;
+
+        void Save<T>(
+            IArtifactContainer artifactContainer,
+            IMLPContainer<T> mlp,
+            IAccuracyRecord accuracyRecord
+            )
+            where T : ILayerContainer;
+
     }
 }

@@ -11,6 +11,7 @@ using Banana.MLP.Classic.BackPropagation.DeDzCalculator;
 using Banana.MLP.Classic.BackPropagation.DeDzCalculator.Hidden;
 using Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor;
 using Banana.MLP.Classic.BackPropagation.UpdateNeuronExecutor;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Container.MLP;
 using Banana.MLP.DesiredValues;
 using Banana.MLP.LearningConfig;
@@ -26,7 +27,7 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.MLP
         }
 
         public CSharpMLPBackpropagator(
-            IMLPContainer mlpContainer,
+            IMLPContainer<CSharpLayerContainer> mlpContainer,
             ICSharpDesiredValuesContainer desiredValuesContainer,
             ILearningAlgorithmConfig learningAlgorithmConfig
             )
@@ -62,7 +63,6 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.MLP
                 IUpdateNablaExecutor updateNablaExecutor = new CSharpUpdateNablaExecutor(
                     previousLayerContainer,
                     currentLayerContainer,
-                    desiredValuesContainer,
                     learningAlgorithmConfig
                     );
 

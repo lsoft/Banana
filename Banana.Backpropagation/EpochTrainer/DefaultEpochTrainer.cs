@@ -5,24 +5,26 @@ using Banana.Common;
 using Banana.Common.Ambient;
 using Banana.Common.Others;
 using Banana.Data.Set;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.DesiredValues;
 using Banana.MLP.DesiredValues.DataSetIterator;
 using Banana.MLP.LearningConfig;
 
 namespace Banana.Backpropagation.EpochTrainer
 {
-    public class DefaultEpochTrainer : IEpochTrainer
+    public class DefaultEpochTrainer<T> : IEpochTrainer
+        where T : ILayerContainer
     {
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
         private readonly IBackpropagationConfig _backpropagationConfig;
-        private readonly IMLPPropagators _propagators;
+        private readonly IMLPPropagators<T> _propagators;
         private readonly IDesiredValuesContainer _desiredValuesContainer;
         private readonly Action _batchAwaiterAction;
 
         public DefaultEpochTrainer(
             ILearningAlgorithmConfig learningAlgorithmConfig,
             IBackpropagationConfig backpropagationConfig,
-            IMLPPropagators propagators,
+            IMLPPropagators<T> propagators,
             IDesiredValuesContainer desiredValuesContainer,
             Action batchAwaiterAction
             )

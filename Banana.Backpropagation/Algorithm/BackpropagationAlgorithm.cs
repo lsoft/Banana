@@ -11,6 +11,7 @@ using Banana.Common.Others;
 using Banana.Data.SetProvider;
 using Banana.MLP.AccuracyRecord;
 using Banana.MLP.ArtifactContainer;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.DesiredValues;
 using Banana.MLP.LearningConfig;
 using Banana.MLP.MLPContainer;
@@ -18,11 +19,12 @@ using Banana.MLP.Validation;
 
 namespace Banana.Backpropagation.Algorithm
 {
-    public class BackpropagationAlgorithm
+    public class BackpropagationAlgorithm<T>
+        where T : ILayerContainer
     {
         private readonly ILearningAlgorithmConfig _learningAlgorithmConfig;
         private readonly ILearningRate _learningRate;
-        private readonly IMLPPropagators _propagators;
+        private readonly IMLPPropagators<T> _propagators;
         private readonly IMLPContainerHelper _mlpContainerHelper;
         private readonly IArtifactContainer _artifactContainer;
         private readonly IValidation _validation;
@@ -31,7 +33,7 @@ namespace Banana.Backpropagation.Algorithm
         public BackpropagationAlgorithm(
             ILearningAlgorithmConfig learningAlgorithmConfig,
             ILearningRate learningRate,
-            IMLPPropagators propagators,
+            IMLPPropagators<T> propagators,
             IMLPContainerHelper mlpContainerHelper,
             IArtifactContainer artifactContainer,
             IValidation validation,

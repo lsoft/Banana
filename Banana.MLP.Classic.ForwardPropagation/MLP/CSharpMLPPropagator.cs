@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Banana.Common.LayerState;
 using Banana.Data.Item;
 using Banana.MLP.Classic.ForwardPropagation.Layer;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Container.MLP;
 using Banana.MLP.Propagator.Layer;
 using Banana.MLP.Propagator.MLP;
 
 namespace Banana.MLP.Classic.ForwardPropagation.MLP
 {
-    public class CSharpMLPPropagator : IMLPPropagator
+    public class CSharpMLPPropagator : IMLPPropagator<CSharpLayerContainer>
     {
-        public IMLPContainer MLPContainer
+        public IMLPContainer<CSharpLayerContainer> MLPContainer
         {
             get;
             private set;
@@ -26,7 +28,7 @@ namespace Banana.MLP.Classic.ForwardPropagation.MLP
         }
 
         public CSharpMLPPropagator(
-            IMLPContainer mlpContainer
+            IMLPContainer<CSharpLayerContainer> mlpContainer
             )
         {
             if (mlpContainer == null)
@@ -69,6 +71,14 @@ namespace Banana.MLP.Classic.ForwardPropagation.MLP
                 fp.ComputeLayer();
             }
 
+        }
+
+        public List<ILayerState> Propagate(
+            IEnumerable<IDataItem> itemList,
+            out TimeSpan propagationTime
+            )
+        {
+            throw new NotImplementedException();
         }
     }
 }

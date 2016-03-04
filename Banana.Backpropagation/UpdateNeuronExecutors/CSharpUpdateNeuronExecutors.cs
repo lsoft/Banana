@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Banana.Common;
 using Banana.MLP.Classic.BackPropagation.UpdateNeuronExecutor;
+using Banana.MLP.Container.Layer.CSharp;
 using Banana.MLP.Container.MLP;
 using Banana.MLP.LearningConfig;
 
@@ -19,7 +20,7 @@ namespace Banana.Backpropagation.UpdateNeuronExecutors
         }
 
         public CSharpUpdateNeuronExecutors(
-            IMLPContainer mlpContainer,
+            IMLPContainer<CSharpLayerContainer> mlpContainer,
             ILearningAlgorithmConfig learningAlgorithmConfig
             )
         {
