@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace Banana.MNIST.ConsoleApplication
     {
         static void Main(string[] args)
         {
+            if (File.Exists("_dvc.csv"))
+            {
+                File.Delete("_dvc.csv");
+            }
+
             var random = new Random(123);
 
             var dif = new DataItemFactory();
@@ -39,7 +45,7 @@ namespace Banana.MNIST.ConsoleApplication
                 new AutoencoderDataSet(
                     MNISTDataSetProvider.Load(
                         "mnist/trainingset/",
-                        10,//int.MaxValue,
+                        100,//int.MaxValue,
                         false,
                         dif
                         ),
@@ -50,7 +56,7 @@ namespace Banana.MNIST.ConsoleApplication
                 new AutoencoderDataSet(
                     MNISTDataSetProvider.Load(
                         "mnist/testset/",
-                        10,//int.MaxValue,
+                        100,//int.MaxValue,
                         false,
                         dif),
                     dif
@@ -93,12 +99,12 @@ namespace Banana.MNIST.ConsoleApplication
                 new HalfSquaredEuclidianDistance(),
                 1,
                 0f,
-                1000
+                1
                 );
 
             var learningRate = new LinearLearningRate(
                 0.001f,
-                0.0995f
+                0.995f
                 );
 
             var backpropagationConfig = new BackpropagationConfig(
@@ -130,7 +136,7 @@ namespace Banana.MNIST.ConsoleApplication
                 new GridReconstructDrawerFactory(
                     new MNISTVisualizerFactory(),
                     validationDataSet,
-                    300
+                    100
                     )
                 );
             //var validation = new Validation(

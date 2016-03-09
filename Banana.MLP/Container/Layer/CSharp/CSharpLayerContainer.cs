@@ -193,7 +193,7 @@ namespace Banana.MLP.Container.Layer.CSharp
 
                 for (var i = 0; i < this.BiasMem.Length; i++)
                 {
-                    this.BiasMem[i] = (float)rnd.NextDouble() * 2f - 1f;
+                    this.BiasMem[i] = (float)rnd.NextDouble() * .2f - .1f;
                 }
             }
         }

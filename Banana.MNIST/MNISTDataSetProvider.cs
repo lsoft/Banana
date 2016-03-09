@@ -13,7 +13,7 @@ namespace Banana.MNIST
     {
         public static IDataSet Load(
             string rootFolder,
-            int maxCountFilesInCategory,
+            int maxCount,
             bool binarize,
             IDataItemFactory dataItemFactory
             )
@@ -85,7 +85,7 @@ namespace Banana.MNIST
                     var imageBuffer = new byte[imageHeight * imageWidth * imageCount];
                     trainSet.Read(imageBuffer, 0, imageHeight * imageWidth * imageCount);
 
-                    for (var imageIndex = 0; imageIndex < Math.Min((long)imageCount, (long)(maxCountFilesInCategory) * 10); imageIndex++)
+                    for (var imageIndex = 0; imageIndex < Math.Min((long)imageCount, maxCount); imageIndex++)
                     {
                         var dinput = new float[784];
 

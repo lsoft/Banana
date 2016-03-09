@@ -6,6 +6,8 @@ namespace Banana.MLP.DesiredValues
 {
     public class CSharpDesiredValuesContainer : ICSharpDesiredValuesContainer
     {
+        private readonly object _locker = new object();
+
         private readonly Queue<float[]> _queue = new Queue<float[]>();
 
         public float[] DesiredOutput
@@ -21,52 +23,43 @@ namespace Banana.MLP.DesiredValues
             DesiredOutput = null;
         }
 
-        public void SetValues(float[] desiredValues)
+        public void Enqueue(float[] desiredValues)
         {
             if (desiredValues == null)
             {
                 throw new ArgumentNullException("desiredValues");
             }
 
-            _queue.Enqueue(desiredValues);
-
-            Refresh(true);
+            lock (_locker)
+            {
+                _queue.Enqueue(desiredValues);
+            }
         }
 
         public bool MoveNext()
         {
             return 
-                Refresh(false);
+                Refresh();
         }
 
         public void Reset()
         {
-            _queue.Clear();
+            lock (_locker)
+            {
+                _queue.Clear();
+            }
+
             DesiredOutput = null;
         }
 
         private bool Refresh(
-            bool onlyIfEmpty
             )
         {
             var result = false;
             
-            var allowedtoProceed = false;
-            if (onlyIfEmpty)
+            lock (_locker)
             {
-                if (DesiredOutput == null)
-                {
-                    allowedtoProceed = true;
-                }
-            }
-            else
-            {
-                allowedtoProceed = true;
-            }
-
-            if (allowedtoProceed)
-            {
-                if(_queue.Count > 0)
+                if (_queue.Count > 0)
                 {
                     DesiredOutput = _queue.Dequeue();
 

@@ -42,7 +42,7 @@ namespace Banana.MLP.DesiredValues
             _maxUnusedQueueSize = maxUnusedQueueSize;
         }
 
-        public void SetValues(float[] desiredValues)
+        public void Enqueue(float[] desiredValues)
         {
             if (desiredValues == null)
             {
@@ -80,14 +80,12 @@ namespace Banana.MLP.DesiredValues
             newMem.Write(BlockModeEnum.NonBlocking);
 
             _queue.Enqueue(newMem);
-
-            Refresh(true);
         }
 
         public bool MoveNext()
         {
             return
-                Refresh(false);
+                Refresh();
         }
 
         public void Reset()
@@ -115,54 +113,35 @@ namespace Banana.MLP.DesiredValues
         }
 
         private bool Refresh(
-            bool onlyIfEmpty
             )
         {
             var result = false;
-
-            //определяем, нужно ли делать дело
-            var allowedtoProceed = false;
-            if (onlyIfEmpty)
+            
+            if (_queue.Count > 0)
             {
-                if (DesiredOutput == null)
+                //убираем актуальный мем
+                if (DesiredOutput != null)
                 {
-                    allowedtoProceed = true;
-                }
-            }
-            else
-            {
-                allowedtoProceed = true;
-            }
-
-            if (allowedtoProceed)
-            {
-                if (_queue.Count > 0)
-                {
-                    //убираем актуальный мем
-                    if (DesiredOutput != null)
+                    if (_unusedQueue.Count < _maxUnusedQueueSize)
                     {
-                        if (_unusedQueue.Count < _maxUnusedQueueSize)
-                        {
-                            _unusedQueue.Enqueue(DesiredOutput);
-                        }
-                        else
-                        {
-                            DesiredOutput.Dispose();
-                        }
-
-                        DesiredOutput = null;
+                        _unusedQueue.Enqueue(DesiredOutput);
+                    }
+                    else
+                    {
+                        DesiredOutput.Dispose();
                     }
 
-                    //заменяем на новый мем
-                    DesiredOutput = _queue.Dequeue();
-
-                    result = true;
+                    DesiredOutput = null;
                 }
+
+                //заменяем на новый мем
+                DesiredOutput = _queue.Dequeue();
+
+                result = true;
             }
 
             return
                 result;
         }
-
     }
 }

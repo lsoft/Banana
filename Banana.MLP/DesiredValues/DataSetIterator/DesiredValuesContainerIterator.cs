@@ -184,7 +184,7 @@ namespace Banana.MLP.DesiredValues.DataSetIterator
                     }
 
                     _bgQueue.Enqueue(i);
-                    _desiredValuesContainer.SetValues(i.Output);
+                    _desiredValuesContainer.Enqueue(i.Output);
                 }
                 else
                 {
