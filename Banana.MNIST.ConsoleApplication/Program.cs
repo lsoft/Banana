@@ -45,7 +45,7 @@ namespace Banana.MNIST.ConsoleApplication
                 new AutoencoderDataSet(
                     MNISTDataSetProvider.Load(
                         "mnist/trainingset/",
-                        100,//int.MaxValue,
+                        1000,//int.MaxValue,
                         false,
                         dif
                         ),
@@ -56,7 +56,7 @@ namespace Banana.MNIST.ConsoleApplication
                 new AutoencoderDataSet(
                     MNISTDataSetProvider.Load(
                         "mnist/testset/",
-                        100,//int.MaxValue,
+                        1000,//int.MaxValue,
                         false,
                         dif),
                     dif
@@ -69,7 +69,7 @@ namespace Banana.MNIST.ConsoleApplication
                     new InputLayerConfiguration(trainDataSet.InputLength),
                     new FullConnectedLayerConfiguration(300, new RLUFunction()),
                     //new FullConnectedLayerConfiguration(10, new SigmoidFunction(1f)),
-                    new FullConnectedLayerConfiguration(trainDataSet.InputLength, new RLUFunction()),
+                    new FullConnectedLayerConfiguration(trainDataSet.OutputLength, new RLUFunction()),
                 }
                 );
 

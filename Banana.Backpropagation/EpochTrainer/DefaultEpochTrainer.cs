@@ -132,7 +132,7 @@ namespace Banana.Backpropagation.EpochTrainer
 
                 _propagators.ForwardPropagator.Propagate(trainDataItem);
 
-                _desiredValuesContainer.Enqueue(trainDataItem.Output);
+                //_desiredValuesContainer.Enqueue(trainDataItem.Output);
 
                 _propagators.Backpropagator.Backpropagate(
                     learningRate,
