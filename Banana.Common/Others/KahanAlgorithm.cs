@@ -47,7 +47,7 @@ namespace Banana.Common.Others
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Sum(
+        public static float PreciseSum(
             int dataCount,
             Func<int, float> floatProvider
             )
@@ -69,11 +69,11 @@ namespace Banana.Common.Others
             }
 
             return
-                tempArray.Sum();
+                tempArray.PreciseSum();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Sum(
+        public static float PreciseSum(
             this float[] data
             )
         {

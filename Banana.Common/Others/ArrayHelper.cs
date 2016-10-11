@@ -603,8 +603,7 @@ namespace Banana.Common.Others
         }
 
         public static float Sum(
-            this float[] array,
-            bool useKahan
+            this float[] array
             )
         {
             if (array == null)
@@ -612,20 +611,11 @@ namespace Banana.Common.Others
                 throw new ArgumentNullException("array");
             }
 
-            float result;
+            var result = 0f;
 
-            if (useKahan)
+            for (var cc = 0; cc < array.Length; cc++)
             {
-                result = array.Sum();
-            }
-            else
-            {
-                result = 0f;
-
-                for (var cc = 0; cc < array.Length; cc++)
-                {
-                    result += array[cc];
-                }
+                result += array[cc];
             }
 
             return result;

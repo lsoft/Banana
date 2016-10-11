@@ -36,7 +36,7 @@ namespace Banana.Common.Metrics
                 throw new ArgumentException("desiredValues.Length != predictedValues.Length");
             }
 
-            var sum = predictedValues.Sum();
+            var sum = predictedValues.PreciseSum();
 
             var acc = new KahanAlgorithm.Accumulator();
 

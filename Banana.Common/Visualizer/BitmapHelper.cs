@@ -7,13 +7,29 @@ namespace Banana.Common.Visualizer
     public class BitmapHelper
     {
         public static void CreateContrastEnhancedBitmapFrom(
-            Bitmap bitmap,
-            int left,
-            int top,
-            float[] layer)
+            float[] layer, 
+            int width, 
+            int height, 
+            Bitmap bitmap, 
+            int left, 
+            int top
+            )
         {
-            var max = layer.Take(28 * 28).Max(val => val);// < 0 ? 0 : val);
-            var min = layer.Take(28 * 28).Min(val => val);// < 0 ? 0 : val);
+            if (bitmap == null)
+            {
+                throw new ArgumentNullException("bitmap");
+            }
+            if (layer == null)
+            {
+                throw new ArgumentNullException("layer");
+            }
+            if (layer.Length < width*height)
+            {
+                throw new ArgumentException("layer.Length < width*height");
+            }
+
+            float max = layer.Take(width*height).Max(val => val);
+            float min = layer.Take(width*height).Min(val => val);
 
             if (Math.Abs(min - max) <= float.Epsilon)
             {
@@ -21,13 +37,13 @@ namespace Banana.Common.Visualizer
                 max = 1;
             }
 
-            for (int x = 0; x < 28; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < 28; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    var value = layer[PointToIndex(x, y, 28)];
-                    value = (value - min) / (max - min);
-                    var b = (byte)Math.Max(0, Math.Min(255, value * 255.0));
+                    float value = layer[PointToIndex(x, y, width)];
+                    value = (value - min)/(max - min);
+                    var b = (byte) Math.Max(0, Math.Min(255, value*255.0));
 
                     bitmap.SetPixel(left + x, top + y, Color.FromArgb(b, b, b));
                 }
@@ -36,8 +52,7 @@ namespace Banana.Common.Visualizer
 
         private static int PointToIndex(int x, int y, int width)
         {
-            return y * width + x;
+            return y*width + x;
         }
-
     }
 }

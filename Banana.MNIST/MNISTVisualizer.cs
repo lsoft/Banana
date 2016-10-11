@@ -45,10 +45,13 @@ namespace Banana.MNIST
             }
 
             BitmapHelper.CreateContrastEnhancedBitmapFrom(
-                _gridBitmap,
-                (_gridCurrentIndex % _q) * ImageWidth,
-                ((int)(_gridCurrentIndex / _q)) * ImageHeight,
-                data);
+                data,
+                28,
+                28, 
+                _gridBitmap, 
+                (_gridCurrentIndex % _q) * ImageWidth, 
+                ((int)(_gridCurrentIndex / _q)) * ImageHeight
+                );
 
             _gridCurrentIndex++;
         }
@@ -63,17 +66,21 @@ namespace Banana.MNIST
             }
 
             BitmapHelper.CreateContrastEnhancedBitmapFrom(
-                _pairBitmap,
-                0,
-                _pairCurrentIndex * ImageHeight,
-                data.First
+                data.First,
+                28,
+                28, 
+                _pairBitmap, 
+                0, 
+                _pairCurrentIndex * ImageHeight
                 );
 
             BitmapHelper.CreateContrastEnhancedBitmapFrom(
-                _pairBitmap,
-                ImageWidth + 1,
-                _pairCurrentIndex * ImageHeight,
-                data.Second
+                data.Second,
+                28,
+                28,
+                _pairBitmap, 
+                ImageWidth + 1, 
+                _pairCurrentIndex * ImageHeight
                 );
 
             _pairCurrentIndex++;

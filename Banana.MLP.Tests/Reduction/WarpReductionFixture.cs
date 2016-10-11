@@ -180,7 +180,7 @@ __kernel void TestReductionKernel(
                         Array.Clear(t.Array, 0, t.Array.Length);
                         t.Write(BlockModeEnum.Blocking);
 
-                        var cpuSum = KahanAlgorithm.Sum(m.Array);
+                        var cpuSum = m.Array.PreciseSum();
 
                         kernel
                             .SetKernelArgMem(0, m)
@@ -202,7 +202,7 @@ __kernel void TestReductionKernel(
 
                         t.Read(BlockModeEnum.Blocking);
 
-                        var gpuSum = KahanAlgorithm.Sum(t.Array);
+                        var gpuSum = t.Array.PreciseSum();
 
                         ConsoleAmbientContext.Console.WriteLine((cpuSum - gpuSum).ToString());
 

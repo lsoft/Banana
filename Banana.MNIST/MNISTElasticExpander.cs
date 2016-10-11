@@ -11,12 +11,21 @@ using OpenCvSharp.Extensions;
 namespace Banana.MNIST
 {
     /// <summary>
-    /// Класс, размножающий множество MNIST картинок с помощью афинных и эластичных трансформаций
+    ///     Класс, размножающий множество MNIST картинок с помощью афинных и эластичных трансформаций
     /// </summary>
     public class MNISTElasticExpander
     {
-        private readonly Random _randomizer;
         private readonly IDataItemFactory _dataItemFactory;
+
+
+        private readonly object _gaussLocker = new object();
+        private readonly Random _randomizer;
+        private volatile double[] _gaussCoef;
+        private double[,] _gaussX, _gaussY;
+        private double _maxXGauss;
+        private double _maxYGauss;
+        private double _minXGauss;
+        private double _minYGauss;
 
         public MNISTElasticExpander(
             Random randomizer,
@@ -42,34 +51,34 @@ namespace Banana.MNIST
             int stepRefreshGaussMap
             )
         {
-
             Console.WriteLine("Deformations starts...");
 
-            var originalImagesCount = toDeformDataSet.Count;
-            var newImagesCount = originalImagesCount * (deformationEpocheCount + 1);
+            int originalImagesCount = toDeformDataSet.Count;
+            int newImagesCount = originalImagesCount*(deformationEpocheCount + 1);
 
             var resultItemList = new List<IDataItem>(newImagesCount + 100);
 
-            for (var dd = 0; dd < deformationEpocheCount; dd++)
+            for (int dd = 0; dd < deformationEpocheCount; dd++)
             {
-                var start = DateTime.Now;
+                DateTime start = DateTime.Now;
                 Console.WriteLine("Deformations epoche: " + dd);
 
                 //Запускаем операцию искажения, последовательно, так как каждые stepRefreshGaussMap итераций
                 //мы будет менять гауссово поле искажений
-                var cc = 0;
+                int cc = 0;
 
-                using(var iterator = toDeformDataSet.StartIterate())
-                    while(iterator.MoveNext())
+                using (IDataSetIterator iterator = toDeformDataSet.StartIterate())
+                {
+                    while (iterator.MoveNext())
                     {
-                        var o = iterator.Current;
+                        IDataItem o = iterator.Current;
 
                         //какое это число?
-                        var correctValue = o.Output.ToList().FindIndex(j => j > 0.0);
-                        var maxAngle = (correctValue == 1 || correctValue == 7) ? 6 : 15;
+                        int correctValue = o.Output.ToList().FindIndex(j => j > 0.0);
+                        int maxAngle = (correctValue == 1 || correctValue == 7) ? 6 : 15;
 
                         bool changed;
-                        var d0 = LetterAffineDeform(
+                        float[] d0 = LetterAffineDeform(
                             _randomizer,
                             o.Input,
                             maxAngle,
@@ -77,7 +86,7 @@ namespace Banana.MNIST
                             28,
                             out changed);
 
-                        if (cc % stepRefreshGaussMap == 0)
+                        if (cc%stepRefreshGaussMap == 0)
                         {
                             //каждую stepRefreshGaussMap операцию генерируем новое гауссово поле искажений
                             CreateGaussedRandomDisplacementMap(
@@ -86,25 +95,28 @@ namespace Banana.MNIST
                                 28);
                         }
 
-                        var d1 = LetterElasticDeform2(
+                        float[] d1 = LetterElasticDeform2(
                             d0,
                             28,
                             28,
-                            2);
+                            2
+                            );
 
                         //if (changed)
                         {
                             resultItemList.Add(
                                 _dataItemFactory.CreateDataItem(
                                     d1,
-                                    o.Output)
+                                    o.Output
+                                    )
                                 );
                         }
 
                         cc++;
                     }
+                }
 
-                var end = DateTime.Now;
+                DateTime end = DateTime.Now;
                 Console.WriteLine("Epoche takes " + (end - start));
             }
 
@@ -115,12 +127,6 @@ namespace Banana.MNIST
                     resultItemList
                     );
         }
-
-
-        private readonly object _gaussLocker = new object();
-        private volatile double[] _gaussCoef;
-        private double[,] _gaussX, _gaussY;
-        private double _maxXGauss, _minXGauss, _maxYGauss, _minYGauss;
 
         private void CreateGaussedRandomDisplacementMap(
             Random randomizer,
@@ -146,17 +152,17 @@ namespace Banana.MNIST
                 {
                     if (_gaussCoef == null)
                     {
-                        _gaussCoef = new double[2 * (radius + 1) * (radius + 1)];
+                        _gaussCoef = new double[2*(radius + 1)*(radius + 1)];
 
-                        for (var dx = 0; dx < radius; dx++)
+                        for (int dx = 0; dx < radius; dx++)
                         {
-                            for (var dy = 0; dy < radius; dy++)
+                            for (int dy = 0; dy < radius; dy++)
                             {
-                                var index = dx * dx + dy * dy;
+                                int index = dx*dx + dy*dy;
 
                                 _gaussCoef[index] =
-                                    (1.0 / (2.0 * Math.PI * sigma * sigma))
-                                    * Math.Exp(-index / (2.0 * sigma * sigma));
+                                    (1.0/(2.0*Math.PI*sigma*sigma))
+                                    *Math.Exp(-index/(2.0*sigma*sigma));
                             }
                         }
                     }
@@ -165,8 +171,8 @@ namespace Banana.MNIST
 
             #endregion
 
-            var scaledImageWidth = imageWidth * scaleFactor;
-            var scaledImageHeight = imageHeight * scaleFactor;
+            int scaledImageWidth = imageWidth*scaleFactor;
+            int scaledImageHeight = imageHeight*scaleFactor;
 
             #region генерируем шумовую карту
 
@@ -177,14 +183,14 @@ namespace Banana.MNIST
 
             const int step = 4;
 
-            for (var x = 0; x < scaledImageWidth; x += step)
+            for (int x = 0; x < scaledImageWidth; x += step)
             {
-                for (var y = 0; y < scaledImageHeight; y += step)
+                for (int y = 0; y < scaledImageHeight; y += step)
                 {
-                    var diffx = randomizer.Next() * 2.0 - 1.0;
+                    double diffx = randomizer.Next()*2.0 - 1.0;
                     rdfX[x, y] = diffx;
 
-                    var diffy = randomizer.Next() * 2.0 - 1.0;
+                    double diffy = randomizer.Next()*2.0 - 1.0;
                     rdfY[x, y] = diffy;
                 }
             }
@@ -201,44 +207,45 @@ namespace Banana.MNIST
             Parallel.For(0, scaledImageWidth, x =>
                 //for (var x = 0; x < scaledImageWidth; x++)
             {
-                for (var y = 0; y < scaledImageHeight; y++)
+                for (int y = 0; y < scaledImageHeight; y++)
                 {
-                    var deltaGaussX = 0.0;
-                    var deltaGaussY = 0.0;
+                    double deltaGaussX = 0.0;
+                    double deltaGaussY = 0.0;
 
-                    for (var dx = -radius + 1; dx < radius; dx++)
+                    for (int dx = -radius + 1; dx < radius; dx++)
                     {
-                        for (var dy = -radius + 1; dy < radius; dy++)
+                        for (int dy = -radius + 1; dy < radius; dy++)
                         {
-                            if (Math.Sqrt(dx * dx + dy * dy) >= radius)
+                            if (Math.Sqrt(dx*dx + dy*dy) >= radius)
+                            {
                                 continue;
+                            }
 
-                            var xc = x + dx;
-                            var yc = y + dy;
+                            int xc = x + dx;
+                            int yc = y + dy;
 
-                            var index = dx * dx + dy * dy;
-                            var gaussCoef = _gaussCoef[index];
+                            int index = dx*dx + dy*dy;
+                            double gaussCoef = _gaussCoef[index];
 
-                            var rdf_x =
+                            double rdf_x =
                                 xc < 0 || xc >= scaledImageWidth
                                 || yc < 0 || yc >= scaledImageHeight
                                     ? 0.0
                                     : rdfX[xc, yc];
 
-                            var rdf_y =
+                            double rdf_y =
                                 xc < 0 || xc >= scaledImageWidth
                                 || yc < 0 || yc >= scaledImageHeight
                                     ? 0.0
                                     : rdfY[xc, yc];
 
-                            deltaGaussX += rdf_x * gaussCoef;
-                            deltaGaussY += rdf_y * gaussCoef;
+                            deltaGaussX += rdf_x*gaussCoef;
+                            deltaGaussY += rdf_y*gaussCoef;
                         }
                     }
 
                     _gaussX[x, y] = deltaGaussX;
                     _gaussY[x, y] = deltaGaussY;
-
                 }
             }
                 ); //Parallel.For
@@ -252,11 +259,11 @@ namespace Banana.MNIST
             _minXGauss = double.MaxValue;
             _maxYGauss = double.MinValue;
             _minYGauss = double.MaxValue;
-            for (var x = 0; x < scaledImageWidth; x++)
+            for (int x = 0; x < scaledImageWidth; x++)
             {
-                for (var y = 0; y < scaledImageHeight; y++)
+                for (int y = 0; y < scaledImageHeight; y++)
                 {
-                    var xValue = Math.Abs(_gaussX[x, y]);
+                    double xValue = Math.Abs(_gaussX[x, y]);
                     if (_maxXGauss < xValue)
                     {
                         _maxXGauss = xValue;
@@ -266,7 +273,7 @@ namespace Banana.MNIST
                         _minXGauss = xValue;
                     }
 
-                    var yValue = Math.Abs(_gaussY[x, y]);
+                    double yValue = Math.Abs(_gaussY[x, y]);
                     if (_maxYGauss < yValue)
                     {
                         _maxYGauss = yValue;
@@ -283,11 +290,11 @@ namespace Banana.MNIST
             #region выравниваем масштаб карты искажений
 
             //apply defined scale of deformation
-            var deformXScale = maxDeformScale / _maxXGauss;
-            var deformYScale = maxDeformScale / _maxYGauss;
-            for (var x = 0; x < scaledImageWidth; x++)
+            double deformXScale = maxDeformScale/_maxXGauss;
+            double deformYScale = maxDeformScale/_maxYGauss;
+            for (int x = 0; x < scaledImageWidth; x++)
             {
-                for (var y = 0; y < scaledImageHeight; y++)
+                for (int y = 0; y < scaledImageHeight; y++)
                 {
                     _gaussX[x, y] *= deformXScale;
                     _gaussY[x, y] *= deformYScale;
@@ -351,27 +358,27 @@ namespace Banana.MNIST
             int imageHeight,
             int scaleFactor)
         {
-            var origByte = Array.ConvertAll(imageBuffer, j => (byte)(j * 255f));
+            byte[] origByte = Array.ConvertAll(imageBuffer, j => (byte) (j*255f));
 
-            var scaledImageWidth = imageWidth * scaleFactor;
-            var scaledImageHeight = imageHeight * scaleFactor;
+            int scaledImageWidth = imageWidth*scaleFactor;
+            int scaledImageHeight = imageHeight*scaleFactor;
 
-            var scaledImageBuffer = new byte[scaledImageWidth * scaledImageHeight];
+            var scaledImageBuffer = new byte[scaledImageWidth*scaledImageHeight];
 
             fixed (byte* p = origByte)
             {
-                using (var gray = IplImage.FromPixelData(imageWidth, imageHeight, 1, new IntPtr(p)))
+                using (IplImage gray = IplImage.FromPixelData(imageWidth, imageHeight, 1, new IntPtr(p)))
                 {
                     using (var rs = new IplImage(scaledImageWidth, scaledImageHeight, BitDepth.U8, 1))
                     {
                         gray.Resize(rs, Interpolation.Lanczos4);
 
                         //записываем обратно в буфер
-                        for (var x = 0; x < scaledImageWidth; x += 1)
+                        for (int x = 0; x < scaledImageWidth; x += 1)
                         {
-                            for (var y = 0; y < scaledImageHeight; y += 1)
+                            for (int y = 0; y < scaledImageHeight; y += 1)
                             {
-                                scaledImageBuffer[scaledImageHeight * x + y] = (byte)(rs.Get2D(x, y).Val0);
+                                scaledImageBuffer[scaledImageHeight*x + y] = (byte) (rs.Get2D(x, y).Val0);
                             }
                         }
 
@@ -386,27 +393,27 @@ namespace Banana.MNIST
 
             //обработка буквы
 
-            var result = new byte[scaledImageWidth * scaledImageHeight];
+            var result = new byte[scaledImageWidth*scaledImageHeight];
 
             //apply gaussed random displacement field
 
-            for (var x = 0; x < scaledImageWidth; x++)
+            for (int x = 0; x < scaledImageWidth; x++)
             {
-                for (var y = 0; y < scaledImageHeight; y++)
+                for (int y = 0; y < scaledImageHeight; y++)
                 {
-                    var shiftX = _gaussX[x, y];
-                    var shiftY = _gaussY[x, y];
+                    double shiftX = _gaussX[x, y];
+                    double shiftY = _gaussY[x, y];
 
-                    var newX = (int)(x + shiftX + 0.5f);
-                    var newY = (int)(y + shiftY + 0.5f);
+                    var newX = (int) (x + shiftX + 0.5f);
+                    var newY = (int) (y + shiftY + 0.5f);
 
-                    var newPixel =
+                    byte newPixel =
                         newX < 0 || newX >= scaledImageWidth
                         || newY < 0 || newY >= scaledImageHeight
-                            ? (byte)0
-                            : scaledImageBuffer[scaledImageWidth * newY + newX];
+                            ? (byte) 0
+                            : scaledImageBuffer[scaledImageWidth*newY + newX];
 
-                    result[scaledImageHeight * x + y] = newPixel;
+                    result[scaledImageHeight*x + y] = newPixel;
                 }
             }
 
@@ -414,7 +421,7 @@ namespace Banana.MNIST
 
             fixed (byte* p = result)
             {
-                using (var gray = IplImage.FromPixelData(scaledImageWidth, scaledImageHeight, 1, new IntPtr(p)))
+                using (IplImage gray = IplImage.FromPixelData(scaledImageWidth, scaledImageHeight, 1, new IntPtr(p)))
                 {
                     using (var ds = new IplImage(imageWidth, imageHeight, BitDepth.U8, 1))
                     {
@@ -485,14 +492,14 @@ namespace Banana.MNIST
 
                         #endregion
 
-                        var downResult = new float[imageWidth * imageHeight];
+                        var downResult = new float[imageWidth*imageHeight];
 
-                        var scaledIndex = 0;
-                        for (var y = 0; y < imageHeight; y += 1)
+                        int scaledIndex = 0;
+                        for (int y = 0; y < imageHeight; y += 1)
                         {
-                            for (var x = 0; x < imageWidth; x += 1)
+                            for (int x = 0; x < imageWidth; x += 1)
                             {
-                                downResult[scaledIndex] = (float)(ds.Get2D(x, y).Val0 / 255.0f);
+                                downResult[scaledIndex] = (float) (ds.Get2D(x, y).Val0/255.0f);
 
                                 scaledIndex++;
                             }
@@ -522,26 +529,26 @@ namespace Banana.MNIST
         {
             var origImage = new Bitmap(imageWidth, imageHeight);
 
-            var inImageIndex = 0;
-            for (var h = 0; h < imageHeight; h++)
+            int inImageIndex = 0;
+            for (int h = 0; h < imageHeight; h++)
             {
-                for (var w = 0; w < imageWidth; w++)
+                for (int w = 0; w < imageWidth; w++)
                 {
-                    var value = imageBuffer[inImageIndex];
+                    float value = imageBuffer[inImageIndex];
                     origImage.SetPixel(
                         w,
                         h,
                         Color.FromArgb(
-                            (int)(value * 255),
-                            (int)(value * 255),
-                            (int)(value * 255)));
+                            (int) (value*255),
+                            (int) (value*255),
+                            (int) (value*255)));
 
                     inImageIndex++;
                 }
             }
 
             //обработка буквы
-            using (var src = BitmapConverter.ToIplImage(origImage))
+            using (IplImage src = origImage.ToIplImage())
             {
                 //using (var w2 = new CvWindow("44"))
                 //{
@@ -567,12 +574,12 @@ namespace Banana.MNIST
                     {
                         if (randomizer.Next() > 0.2f)
                         {
-                            var centerShiftX = randomizer.Next() * 20 - 10;
-                            var centerShiftY = randomizer.Next() * 20 - 10;
-                            var angle = randomizer.Next() * (2 * maxRotationAngle) - maxRotationAngle;
+                            int centerShiftX = randomizer.Next()*20 - 10;
+                            int centerShiftY = randomizer.Next()*20 - 10;
+                            int angle = randomizer.Next()*(2*maxRotationAngle) - maxRotationAngle;
 
-                            var rotateCenter = new CvPoint2D32f(src.Width / 2f + centerShiftX, src.Height / 2f + centerShiftY);
-                            var rotateMatrix = Cv.GetRotationMatrix2D(rotateCenter, angle, 1.0);
+                            var rotateCenter = new CvPoint2D32f(src.Width/2f + centerShiftX, src.Height/2f + centerShiftY);
+                            CvMat rotateMatrix = Cv.GetRotationMatrix2D(rotateCenter, angle, 1.0);
 
                             rotated.Set(new CvScalar(0));
                             Cv.WarpAffine(gray, rotated, rotateMatrix);
@@ -649,18 +656,18 @@ namespace Banana.MNIST
                             //    Cv.WaitKey();
                             //}
 
-                            var result = new float[imageWidth * imageHeight];
+                            var result = new float[imageWidth*imageHeight];
 
-                            var inResultImageIndex = 0;
-                            for (var w = 0; w < imageWidth; w++)
+                            int inResultImageIndex = 0;
+                            for (int w = 0; w < imageWidth; w++)
                             {
-                                for (var h = 0; h < imageHeight; h++)
+                                for (int h = 0; h < imageHeight; h++)
                                 {
-                                    var value3 =
+                                    CvScalar value3 =
                                         shifted.Get2D(w, h);
-                                    var value = Math.Sqrt((value3.Val0 * value3.Val0 + value3.Val1 * value3.Val1 + value3.Val2 * value3.Val2) / 3.0);
+                                    double value = Math.Sqrt((value3.Val0*value3.Val0 + value3.Val1*value3.Val1 + value3.Val2*value3.Val2)/3.0);
 
-                                    result[inResultImageIndex] = (float)(value / 255.0f);
+                                    result[inResultImageIndex] = (float) (value/255.0f);
 
                                     inResultImageIndex++;
                                 }

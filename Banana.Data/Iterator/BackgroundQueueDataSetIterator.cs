@@ -17,7 +17,7 @@ namespace Banana.Data.Iterator
         private readonly int _cacheSize;
         private readonly IDataSetIterator _iterator;
 
-        private readonly ManualResetEventSlim _abortEvent = new ManualResetEventSlim(false);
+        private readonly ManualResetEventSlim _abortSingal = new ManualResetEventSlim(false);
 
         private ConcurrentQueue<IDataItem> _bgQueue;
         private ConcurrentQueue<IDataItem> _workQueue;
@@ -115,7 +115,7 @@ namespace Banana.Data.Iterator
 
                 StopWork();
 
-                _abortEvent.Dispose();
+                _abortSingal.Dispose();
 
                 _iterator.Dispose();
             }
@@ -136,7 +136,7 @@ namespace Banana.Data.Iterator
 
         private void StopWork()
         {
-            _abortEvent.Set();
+            _abortSingal.Set();
 
             WaitForWorkStopped();
         }
@@ -157,7 +157,7 @@ namespace Banana.Data.Iterator
 
             var index = 0;
 
-            while (index++ < _cacheSize && !_abortEvent.Wait(0))
+            while (index++ < _cacheSize && !_abortSingal.Wait(0))
             {
                 if (_iterator.MoveNext())
                 {
@@ -178,7 +178,7 @@ namespace Banana.Data.Iterator
                     //no more data
                     _bgQueue.Enqueue(null);
 
-                    _abortEvent.Set();
+                    _abortSingal.Set();
                 }
             }
         }
