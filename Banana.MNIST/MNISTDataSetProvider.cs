@@ -33,7 +33,7 @@ namespace Banana.MNIST
             var resultList = new List<IDataItem>();
 
             //готовим файл с данными
-            using (var trainSet = File.OpenRead(Path.Combine(rootFolder, "\\images.idx3-ubyte")))
+            using (var trainSet = File.OpenRead(Path.Combine(rootFolder, "images.idx3-ubyte")))
             {
                 {
                     var magicNumb = new byte[4];
@@ -60,7 +60,7 @@ namespace Banana.MNIST
                 var imageWidth = BitConverter.ToInt32(imageWidthb.Reverse().ToArray(), 0);
 
                 //готовим файл с метками
-                using (var trainLabelSet = File.OpenRead(Path.Combine(rootFolder, "\\labels.idx1-ubyte")))
+                using (var trainLabelSet = File.OpenRead(Path.Combine(rootFolder, "labels.idx1-ubyte")))
                 {
                     {
                         var magicNumb = new byte[4];

@@ -39,17 +39,23 @@ namespace Banana.MLP.Classic.BackPropagation.DeDyAggregator
         {
             ForHelper.ForBetween(0, _previousLayerConfiguration.TotalNeuronCount, previousLayerNeuronIndex =>
             {
+                var aggregateLayerTotalNeuronCount = _aggregateLayerContainer.Configuration.TotalNeuronCount;
+                var previousLayerTotalNeuronCount = _previousLayerConfiguration.TotalNeuronCount;
+
+                var aggregateLayerWeightMem = _aggregateLayerContainer.WeightMem;
+                var aggregateLayerDeDzMem = _aggregateLayerContainer.DeDz;
+
                 //просчет состо€ни€ нейронов текущего сло€, по состо€нию нейронов последующего (with Kahan Algorithm)
                 var accDeDy = new KahanAlgorithm.Accumulator();
-                for (var aggregateNeuronIndex = 0; aggregateNeuronIndex < _aggregateLayerContainer.Configuration.TotalNeuronCount; ++aggregateNeuronIndex)
+                for (var aggregateNeuronIndex = 0; aggregateNeuronIndex < aggregateLayerTotalNeuronCount; ++aggregateNeuronIndex)
                 {
                     int nextWeightIndex = ComputeWeightIndex(
-                        _previousLayerConfiguration.TotalNeuronCount,
+                        previousLayerTotalNeuronCount,
                         aggregateNeuronIndex
                         ) + previousLayerNeuronIndex; //не векторизуетс€:(
 
-                    float w = _aggregateLayerContainer.WeightMem[nextWeightIndex]; //w is a dz/dy
-                    float dedz = _aggregateLayerContainer.DeDz[aggregateNeuronIndex];
+                    float w = aggregateLayerWeightMem[nextWeightIndex]; //w is a dz/dy
+                    float dedz = aggregateLayerDeDzMem[aggregateNeuronIndex];
                     float dedy = w * dedz;
 
                     accDeDy.Add(dedy);

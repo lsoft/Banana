@@ -73,14 +73,19 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
 
                 int currentNablaIndex = ComputeWeightIndex(_previousLayerContainer.Configuration.TotalNeuronCount, neuronIndex);
 
+                var previousLayerTotalNeuronCount = _previousLayerContainer.Configuration.TotalNeuronCount;
+                var previousLayerStateMem = _previousLayerContainer.StateMem;
+                var currentLayerWeightMem = _currentLayerContainer.WeightMem;
+                var regularizationFactor = _learningAlgorithmConfig.RegularizationFactor;
+
                 for (
                     int weightIndex = 0;
-                    weightIndex < _previousLayerContainer.Configuration.TotalNeuronCount;
+                    weightIndex < previousLayerTotalNeuronCount;
                     ++weightIndex)
                 {
-                    float prevOut = _previousLayerContainer.StateMem[weightIndex];
+                    float prevOut = previousLayerStateMem[weightIndex];
 
-                    float weightRegularizationCoef = _learningAlgorithmConfig.RegularizationFactor * _currentLayerContainer.WeightMem[currentNablaIndex + weightIndex];
+                    float weightRegularizationCoef = regularizationFactor * currentLayerWeightMem[currentNablaIndex + weightIndex];
                     float weightCoef = prevOut + weightRegularizationCoef;
                     float deltaWeight = learningRate * dedz * weightCoef;
 

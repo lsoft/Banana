@@ -53,11 +53,12 @@ namespace Banana.MLP.Classic.ForwardPropagation.Layer
 
                 var acc = new KahanAlgorithm.Accumulator();
 
+                var weightMemArray = _currentLayerContainer.WeightMem;
+                var stateMemArray = _previousLayerContainer.StateMem;
+
                 for (var plnIndex = 0; plnIndex < previousLayerNeuronCountTotal; ++plnIndex)
                 {
-                    var increment =
-                        _currentLayerContainer.WeightMem[weightIndex++]
-                        * _previousLayerContainer.StateMem[plnIndex];
+                    var increment = weightMemArray[weightIndex++] * stateMemArray[plnIndex];
 
                     acc.Add(increment);
                 }

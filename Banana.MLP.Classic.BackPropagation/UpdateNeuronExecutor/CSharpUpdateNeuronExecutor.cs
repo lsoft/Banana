@@ -30,15 +30,22 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNeuronExecutor
         public void Execute(
             )
         {
+            var weightMem = _layerContainer.WeightMem;
+            var nablaWeights = _layerContainer.NablaWeights;
+            var batchSize = _learningAlgorithmConfig.BatchSize;
+
             ForHelper.ForBetween(0, _layerContainer.WeightMem.Length, cc =>
             {
-                _layerContainer.WeightMem[cc] += _layerContainer.NablaWeights[cc] / _learningAlgorithmConfig.BatchSize;
+                weightMem[cc] += nablaWeights[cc] / batchSize;
             }
             ); //ForHelper.ForBetween
 
+            var biasMem = _layerContainer.BiasMem;
+            var nablaBiases = _layerContainer.NablaBiases;
+
             ForHelper.ForBetween(0, _layerContainer.BiasMem.Length, cc =>
             {
-                _layerContainer.BiasMem[cc] += _layerContainer.NablaBiases[cc] / _learningAlgorithmConfig.BatchSize;
+                biasMem[cc] += nablaBiases[cc] / batchSize;
             }
             ); //ForHelper.ForBetween
 

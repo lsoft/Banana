@@ -1,5 +1,6 @@
 ﻿using System;
 using Banana.Common.Ambient;
+using Banana.Common.Others;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenCL.Net;
 using OpenCL.Net.Wrapper;
@@ -121,14 +122,10 @@ __kernel void TestReductionKernel(
                     tp.GroupCount,
                     MemFlags.CopyHostPtr | MemFlags.WriteOnly))
                 {
-                    for (var cc = 0; cc < m.Array.Length; cc++)
-                    {
-                        m.Array[cc] = randomizer.Next(8) + 1;
-                    }
-
+                    m.Array.Fill(() => randomizer.Next(8) + 1);
                     m.Write(BlockModeEnum.Blocking);
 
-                    Array.Clear(t.Array, 0, t.Array.Length);
+                    t.Array.Clear();
                     t.Write(BlockModeEnum.Blocking);
 
                     var before = DateTime.Now;

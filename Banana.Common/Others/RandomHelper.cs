@@ -9,6 +9,60 @@ namespace Banana.Common.Others
 {
     public static class RandomHelper
     {
+        public static void Fill(
+            this Random randomizer,
+            float[] m,
+            int maxValue,
+            int shift
+            )
+        {
+            for (var cc = 0; cc < m.Length; cc++)
+            {
+                m[cc] = randomizer.Next(maxValue) + shift;
+            }
+        }
+
+        public static void Fill(
+            this Random randomizer,
+            float[] m,
+            int maxValue,
+            int shift,
+            float scaler
+            )
+        {
+            for (var cc = 0; cc < m.Length; cc++)
+            {
+                m[cc] = (randomizer.Next(maxValue) + shift) / scaler;
+            }
+        }
+
+        public static void Fill(
+            this Random randomizer,
+            double[] m,
+            int maxValue,
+            int shift
+            )
+        {
+            for (var cc = 0; cc < m.Length; cc++)
+            {
+                m[cc] = randomizer.Next(maxValue) + shift;
+            }
+        }
+
+        public static void Fill(
+            this Random randomizer,
+            double[] m,
+            int maxValue,
+            int shift,
+            double scaler
+            )
+        {
+            for (var cc = 0; cc < m.Length; cc++)
+            {
+                m[cc] = (randomizer.Next(maxValue) + shift) / scaler;
+            }
+        }
+
         public static int GetRandomInt()
         {
             var g = Guid.NewGuid();
