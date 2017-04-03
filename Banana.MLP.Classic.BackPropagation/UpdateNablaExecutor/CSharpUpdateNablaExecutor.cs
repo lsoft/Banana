@@ -43,7 +43,7 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
         {
             Calculate(
                 learningRate,
-                AriphmeticHelper.Assign
+                AriphmeticHelper.AssignConstant
                 );
         }
 
@@ -53,20 +53,15 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
         {
             Calculate(
                 learningRate,
-                AriphmeticHelper.Add
+                AriphmeticHelper.AddConstant
                 );
         }
 
         private void Calculate(
             float learningRate,
-            AriphmeticHelper.FloatDelegate operation
+            float oldValueScale
             )
         {
-            if (operation == null)
-            {
-                throw new ArgumentNullException("operation");
-            }
-
             ForHelper.ForBetween(0, _currentLayerContainer.Configuration.TotalNeuronCount, neuronIndex =>
             {
                 float dedz = _currentLayerContainer.DeDz[neuronIndex];
@@ -74,9 +69,14 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
                 int currentNablaIndex = ComputeWeightIndex(_previousLayerContainer.Configuration.TotalNeuronCount, neuronIndex);
 
                 var previousLayerTotalNeuronCount = _previousLayerContainer.Configuration.TotalNeuronCount;
+                var regularizationFactor = _learningAlgorithmConfig.RegularizationFactor;
+
                 var previousLayerStateMem = _previousLayerContainer.StateMem;
                 var currentLayerWeightMem = _currentLayerContainer.WeightMem;
-                var regularizationFactor = _learningAlgorithmConfig.RegularizationFactor;
+                var currentLayerNablaWeightsMem = _currentLayerContainer.NablaWeights;
+                var currentLayerNablaBiasesMem = _currentLayerContainer.NablaBiases;
+
+                var learningRateDedz = learningRate * dedz;
 
                 for (
                     int weightIndex = 0;
@@ -85,18 +85,24 @@ namespace Banana.MLP.Classic.BackPropagation.UpdateNablaExecutor
                 {
                     float prevOut = previousLayerStateMem[weightIndex];
 
-                    float weightRegularizationCoef = regularizationFactor * currentLayerWeightMem[currentNablaIndex + weightIndex];
-                    float weightCoef = prevOut + weightRegularizationCoef;
-                    float deltaWeight = learningRate * dedz * weightCoef;
+                    var nablaIndex = currentNablaIndex + weightIndex;
 
-                    operation(ref _currentLayerContainer.NablaWeights[currentNablaIndex + weightIndex], deltaWeight);
+                    float weightRegularizationCoef = regularizationFactor * currentLayerWeightMem[nablaIndex];
+                    float weightCoef = prevOut + weightRegularizationCoef;
+                    float deltaWeight = learningRateDedz * weightCoef;
+
+                    var oldWeight = currentLayerNablaWeightsMem[nablaIndex];
+                    var newWeight = oldWeight*oldValueScale + deltaWeight;
+                    currentLayerNablaWeightsMem[nablaIndex] = newWeight;
                 }
 
-                float biasRegularizationCoef = _learningAlgorithmConfig.RegularizationFactor * _currentLayerContainer.BiasMem[neuronIndex];
-                float biasCoef = 1 + biasRegularizationCoef;
-                float deltaBias = learningRate * dedz * biasCoef;
+                float biasRegularizationCoef = regularizationFactor * _currentLayerContainer.BiasMem[neuronIndex];
+                float biasCoef = 1f + biasRegularizationCoef;
+                float deltaBias = learningRateDedz * biasCoef;
 
-                operation(ref _currentLayerContainer.NablaBiases[neuronIndex], deltaBias);
+                var oldBias = currentLayerNablaBiasesMem[neuronIndex];
+                var newBias = oldBias * oldValueScale + deltaBias;
+                currentLayerNablaBiasesMem[neuronIndex] = newBias;
             }
             ); //ForHelper.ForBetween
         }

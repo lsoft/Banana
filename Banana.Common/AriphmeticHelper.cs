@@ -9,18 +9,7 @@ namespace Banana.Common
 {
     public static class AriphmeticHelper
     {
-        public delegate void FloatDelegate(ref float a, float b);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Add(ref float a, float b)
-        {
-            a += b;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Assign(ref float a, float b)
-        {
-            a = b;
-        }
+        public const float AssignConstant = 0f;
+        public const float AddConstant = 1f;
     }
 }
