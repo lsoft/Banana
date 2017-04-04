@@ -6,7 +6,7 @@ namespace Banana.Common.Others
 {
     public static class KahanAlgorithm
     {
-        public class Accumulator
+        public sealed class Accumulator
         {
             private float _sum;
             private float _c;
@@ -20,10 +20,26 @@ namespace Banana.Common.Others
                 }
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Accumulator(
                 )
             {
+                ResetToZero();
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void ResetToZero()
+            {
                 this._sum = 0f;
+                this._c = 0f;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Store(
+                float dataItem
+                )
+            {
+                this._sum = dataItem;
                 this._c = 0f;
             }
 

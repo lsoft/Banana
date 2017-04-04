@@ -63,16 +63,44 @@ namespace Banana.Common.Others
             }
         }
 
-        public static int GetRandomInt()
+        public static int GetPositiveRandomInt(int maxValue)
         {
             var g = Guid.NewGuid();
             var preg = g.ToString().Substring(0, 8);
             var seed = int.Parse(preg, NumberStyles.HexNumber);
 
-            var now = DateTime.Now;
-            var xormask = now.DayOfYear * 24 * 60 * 60 + (int)now.TimeOfDay.TotalSeconds;
+            seed &= 0x7fffffff;
 
-            seed ^= xormask;
+            seed = seed % maxValue;
+            
+            return
+                seed;
+        }
+
+        public static int GetRandomInt(uint maxValueByAbsoluteValue)
+        {
+            if (maxValueByAbsoluteValue >= (uint.MaxValue >> 1))
+            {
+                throw new ArgumentOutOfRangeException("maxValueByAbsoluteValue");
+            }
+
+            var g = Guid.NewGuid();
+            var preg = g.ToString().Substring(0, 8);
+            var seed = uint.Parse(preg, NumberStyles.HexNumber);
+
+            seed = seed % (maxValueByAbsoluteValue * 2);
+
+            var value = (int)seed - (int)maxValueByAbsoluteValue;
+
+            return
+                value;
+        }
+
+        public static int GetRandomInt()
+        {
+            var g = Guid.NewGuid();
+            var preg = g.ToString().Substring(0, 8);
+            var seed = int.Parse(preg, NumberStyles.HexNumber);
 
             return
                 seed;

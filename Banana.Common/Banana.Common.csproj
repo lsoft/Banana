@@ -67,6 +67,8 @@
     <Compile Include="Others\Pair.cs" />
     <Compile Include="Others\RandomHelper.cs" />
     <Compile Include="Others\SplitHelper.cs" />
+    <Compile Include="PerformanceTimer.cs" />
+    <Compile Include="PerformanceTimerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sort\AMDBitonicSorter.cs" />
     <Compile Include="Visualizer\BitmapHelper.cs" />

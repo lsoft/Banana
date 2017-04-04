@@ -58,9 +58,10 @@ namespace Banana.MLP.Validation.Drawer
                 throw new InvalidOperationException("Установить размер можно только один раз");
             }
 
-            var seed = Math.Abs(RandomHelper.GetRandomInt());
+            //var seed = Math.Abs(RandomHelper.GetRandomInt());
+            //_startIndex = Math.Max(0, seed * (Math.Min(_validationData.Count, netResultCount) - _visualizeCount));
 
-            _startIndex = Math.Max(0, seed * (Math.Min(_validationData.Count, netResultCount) - _visualizeCount));
+            _startIndex = Math.Max(0, (Math.Min(_validationData.Count, netResultCount) - _visualizeCount));
             _currentIndex = 0;
             _validationDataIterator = _validationData.StartIterate();
             _visualizer = _visualizerFactory.CreateVisualizer(
@@ -88,52 +89,19 @@ namespace Banana.MLP.Validation.Drawer
                     _visualizer.VisualizeGrid(
                         netResult.NState
                         );
-                }
 
-                if (_currentIndex >= _startIndex)
-                {
-                    if (_currentIndex < _startIndex + _visualizeCount)
+                    //if (_currentIndex >= _startIndex)
                     {
-                        _visualizer.VisualizePair(
-                            new Pair<float[], float[]>(
-                            _validationDataIterator.Current.Output,
-                            netResult.NState)
-                            );
+                        //if (_currentIndex < _startIndex + _visualizeCount)
+                        {
+                            _visualizer.VisualizePair(
+                                new Pair<float[], float[]>(
+                                    _validationDataIterator.Current.Output,
+                                    netResult.NState)
+                                );
+                        }
                     }
                 }
-
-                //using (var s = _containerForSave.GetWriteStreamForResource("grid.bmp"))
-                //{
-                //    _visualizer.SaveAsGrid(
-                //        s,
-                //        netResult.ConvertAll(j => j.NState).Take(_visualizeAsGridCount).ToList());
-
-                //    s.Flush();
-                //}
-
-                ////со случайного индекса
-                //var startIndex = (int) ((DateTime.Now.Millisecond/1000f)*(Math.Min(_validationData.Count, netResult.Count) - _visualizeAsPairCount));
-
-                //var pairList = new List<Pair<float[], float[]>>();
-                //foreach (var pair in netResult.ZipEqualLength(_validationData).Skip(startIndex).Take(_visualizeAsPairCount))
-                //{
-                //    var netResult = pair.Value1;
-                //    var testItem = pair.Value2;
-
-                //    pairList.Add(
-                //        new Pair<float[], float[]>(
-                //            testItem.Output,
-                //            netResult.NState));
-                //}
-
-                //using (var s = _containerForSave.GetWriteStreamForResource("reconstruct.bmp"))
-                //{
-                //    _visualizer.SaveAsPairList(
-                //        s,
-                //        pairList);
-
-                //    s.Flush();
-                //}
 
                 _currentIndex++;
                 _validationDataIterator.MoveNext();

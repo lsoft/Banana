@@ -54,7 +54,7 @@ namespace Banana.MLP.Classic.BackPropagation.Backpropagator.MLP
                 var previousLayerContainer = mlpContainer.Layers[layerIndex - 1];
                 var currentLayerContainer = mlpContainer.Layers[layerIndex];
 
-                IDeDyAggregator deDyAggregator = new CSharpDeDyAggregator(
+                IDeDyAggregator deDyAggregator = new CSharpDeDyAggregator2(
                     previousLayerContainer.Configuration,
                     currentLayerContainer
                     );

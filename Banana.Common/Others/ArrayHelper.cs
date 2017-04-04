@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace Banana.Common.Others
 {
@@ -216,6 +218,33 @@ namespace Banana.Common.Others
             }
 
             return result;
+        }
+
+        public static void DebugDump<T>(this T[] a, string message, int maxCnt = int.MaxValue)
+        {
+            var sb = new StringBuilder();
+
+            var upperLimit = Math.Min(
+                a.Length - 1,
+                maxCnt
+                );
+
+            for (int i = 0; i < upperLimit; i++)
+            {
+                var v = a[i];
+                var vs = v.ToString();
+                sb.Append(vs);
+                sb.Append(" ");
+            }
+
+            var lv = a[upperLimit];
+            var lvs = lv.ToString();
+            sb.Append(lvs);
+
+            Debug.WriteLine(
+                message,
+                sb
+                );
         }
 
         public static void Fill<T>(this T[] a, T value)

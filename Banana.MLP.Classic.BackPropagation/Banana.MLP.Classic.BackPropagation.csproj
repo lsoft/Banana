@@ -42,6 +42,7 @@
     <Compile Include="Backpropagator\Layer\CSharpLayerBackpropagator.cs" />
     <Compile Include="Backpropagator\MLP\CSharpMLPBackpropagator.cs" />
     <Compile Include="DeDyAggregator\CSharpDeDyAggregator.cs" />
+    <Compile Include="DeDyAggregator\CSharpDeDyAggregator2.cs" />
     <Compile Include="DeDyAggregator\IDeDyAggregator.cs" />
     <Compile Include="DeDzCalculator\Hidden\CSharpHiddenLayerDeDzCalculator.cs" />
     <Compile Include="DeDzCalculator\IDeDzCalculator.cs" />
